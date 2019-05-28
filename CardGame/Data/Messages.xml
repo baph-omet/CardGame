@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<messages>
+  <message label="BattleIntro">Battle beginning between %b1 and %b2!</message>
+  <message label="Summon">%u summoned %m!</message>
+  <message label="AttackStart">%u attacked %o's %m2 with %m1!</message>
+  <message label="MonsterDestroyed">%m was destroyed!</message>
+  <message label="AttackTie">...but neither claimed victory.</message>
+  <group label="NewGame">
+    <message>Welcome to this card game project!</message>
+    <message>This is a card battling game based on Yu-Gi-Oh and Hearthstone, but with a larger focus on monster battling.</message>
+    <message>Included in this game is something of a Campaign mode.</message>
+    <message>Battle each opponent to raise your battler level and get new cards.</message>
+    <message>Do you have what it takes to reach the top?</message>
+    <message>First you'll need to tell me your name. What can I call you?</message>
+  </group>
+</messages>

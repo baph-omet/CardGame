@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<cards>
+  <card id="000">
+    <name>Placebo</name>
+    <description>A filler card used to pad out an incomplete deck.</description>
+    <attack>0</attack>
+    <defense>0</defense>
+    <level>0</level>
+    <type>NONE</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="001">
+    <name>Skeleton</name>
+    <description>A spooky, scary, undead warrior. Strikes with an ancient sword.</description>
+    <attack>100</attack>
+    <defense>50</defense>
+    <level>1</level>
+    <type>DARK</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="002">
+    <name>Angel</name>
+    <description>A holy messenger that spreads the word of peace. Lyre afficionado.</description>
+    <attack>110</attack>
+    <defense>90</defense>
+    <level>1</level>
+    <type>LIGHT</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="003">
+    <name>Salamander</name>
+    <description>One of THOSE kinds of Salamanders (the dragon kind)</description>
+    <attack>300</attack>
+    <defense>200</defense>
+    <level>2</level>
+    <type>FIRE</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="004">
+    <name>Angry Beaver</name>
+    <description>Hoover Dam, get a load of those teeth. The tail is pretty deadly, too.</description>
+    <attack>200</attack>
+    <defense>300</defense>
+    <level>2</level>
+    <type>WATER</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="005">
+    <name>Battle Robo</name>
+    <description>Its primary function is to smash skulls. Also makes excellent waffles.</description>
+    <attack>250</attack>
+    <defense>250</defense>
+    <level>2</level>
+    <type>ELECTRIC</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="006">
+    <name>Claw Mole</name>
+    <description>Completely blind, with razor-sharp claws. Proof of Nature's sense of irony.</description>
+    <attack>450</attack>
+    <defense>50</defense>
+    <level>2</level>
+    <type>EARTH</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="007">
+    <name>Eagle Eye</name>
+    <description>A fierce bird of prey with immaculate vision. Strikes from above.</description>
+    <attack>150</attack>
+    <defense>350</defense>
+    <level>2</level>
+    <type>WIND</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="008">
+    <name>Wood Troll</name>
+    <description>A lethargic, warty beast who guards the ancient forest.</description>
+    <attack>100</attack>
+    <defense>400</defense>
+    <level>2</level>
+    <type>FOREST</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="009">
+    <name>Assassin</name>
+    <description>His job is to kill, and he's very good at his job. Not a crazed gunman.</description>
+    <attack>200</attack>
+    <defense>100</defense>
+    <level>1</level>
+    <type>DARK</type>
+    <effect>NONE</effect>
+  </card>
+  <card id="010">
+    <name>Ouroboros</name>
+    <description>The eternal dragon. Through it, all is consumed and reborn.</description>
+    <attack>1000</attack>
+    <defense>1000</defense>
+    <level>8</level>
+    <type>DARK</type>
+    <effect>NONE</effect>
+  </card>
+</cards>

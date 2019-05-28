@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<players>
+  <player id="000">
+    <name>Default</name>
+    <wins>0</wins>
+    <losses>0</losses>
+    <level>0</level>
+    <chest>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">003</card>
+      <card type="MONSTER">004</card>
+      <card type="MONSTER">005</card>
+      <card type="MONSTER">006</card>
+      <card type="MONSTER">007</card>
+      <card type="MONSTER">008</card>
+      <card type="MONSTER">009</card>
+    </chest>
+    <deck>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">003</card>
+      <card type="MONSTER">004</card>
+      <card type="MONSTER">005</card>
+      <card type="MONSTER">006</card>
+      <card type="MONSTER">007</card>
+      <card type="MONSTER">008</card>
+      <card type="MONSTER">009</card>
+    </deck>
+  </player>
+  <player id="001">
+    <name>Nathan</name>
+    <wins>0</wins>
+    <losses>0</losses>
+    <level>0</level>
+    <chest>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">003</card>
+      <card type="MONSTER">004</card>
+      <card type="MONSTER">005</card>
+      <card type="MONSTER">006</card>
+      <card type="MONSTER">007</card>
+      <card type="MONSTER">008</card>
+      <card type="MONSTER">009</card>
+    </chest>
+    <deck>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">003</card>
+      <card type="MONSTER">004</card>
+      <card type="MONSTER">005</card>
+      <card type="MONSTER">006</card>
+      <card type="MONSTER">007</card>
+      <card type="MONSTER">008</card>
+      <card type="MONSTER">009</card>
+      <card type="MONSTER">010</card>
+    </deck>
+  </player>
+</players>

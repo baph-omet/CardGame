@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<spells>
+  <spell id="001">
+    <name>Fireball</name>
+    <description>Destroy a monster with less than 250 Defense</description>
+    <level>1</level>
+    <effect>
+      <target>MONSTER</target>
+      <requirement>
+        <stat>DEFENSE</stat>
+        <maximum>250</maximum>
+        <minimum>0</minimum>
+      </requirement>
+      <minimum>1</minimum>
+      <maximum>1</maximum>
+      <action>KILL</action>
+    </effect>
+  </spell>
+  <spell id="002">
+    <name>Heal Wave</name>
+    <description>Add 5 Mana to your reserves</description>
+    <effect>
+      <target>MANA</target>
+      <range>SELF</range>
+      <action>MANA</action>
+      <stat>RESERVE</stat>
+      <amount>5</amount>
+    </effect>
+  </spell>
+  <spell id="003">
+    <name>Mana Spring</name>
+    <description>Gain 1 free Mana allotment per turn</description>
+    <level>2</level>
+    <type>CONTINUOUS</type>
+    <trigger>TURNSTART</trigger>
+    <effect>
+      <target>MANA</target>
+      <range>SELF</range>
+      <action>MANA</action>
+      <stat>ALLOTMENT</stat>
+      <amount>1</amount>
+    </effect>
+  </spell>
+  <spell id="004">
+    <name>Roid Rage</name>
+    <description>Increase Attack by 100 and Level by 1. Decrease Defense by 50.</description>
+    <level>2</level>
+    <type>EQUIP</type>
+    <effect>
+      <target>MONSTER</target>
+      <type>STAT</type>
+      <stat>ATTACK</stat>
+      <amount>100</amount>
+    </effect>
+    <effect>
+      <assignment>PREVIOUS</assignment>
+      <type>STAT</type>
+      <stat>LEVEL</stat>
+      <amount>1</amount>
+    </effect>
+    <effect>
+      <assignment>PREVIOUS</assignment>
+      <type>STAT</type>
+      <stat>DEFENSE</stat>
+      <amount>-50</amount>
+    </effect>
+  </spell>
+  <spell id="005">
+    <name>Spell Cancel</name>
+    <description>When a Spell is activated, inhibit its effect and destroy the card.</description>
+    <level>1</level>
+    <type>COUNTER</type>
+    <trigger>SPELL</trigger>
+    <effect>
+      <target>SPELL</target>
+      <assignment>TRIGGER</assignment>
+      <type>INHIBIT</type>
+      <stat>SPELL</stat>
+    </effect>
+    <effect>
+      <assignment>PREVIOUS</assignment>
+      <type>KILL</type>
+      <stat>SPELL</stat>
+    </effect>
+  </spell>
+  <spell id="006">
+    <name>Ethereal-Magical Pulse</name>
+    <description>Destroy all Spell cards on the field.</description>
+    <level>2</level>
+    <effect>
+      <target>SPELL</target>
+      <range>ANY</range>
+      <assignment>ALL</assignment>
+      <action>KILL</action>
+    </effect>
+  </spell>
+</spells>

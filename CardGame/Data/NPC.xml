@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<npcs>
+  <npc id="001">
+    <Name>Jim</Name>
+    <Description>A complete beginner who only plays casually. Always up for a game.</Description>
+    <Bounty>1</Bounty>
+    <Level>0</Level>
+    <Difficulty>1</Difficulty>
+    <Text>
+      <prebattle>Hey there, I'm Jim. I'm pretty new to this game, so let's just have fun, OK?</prebattle>
+      <victory>Oh wow, you're pretty good. Let's play again sometime!</victory>
+      <defeat>Hey, I actually won! Good game, let's play again.</defeat>
+    </Text>
+    <Deck>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">003</card>
+      <card type="MONSTER">004</card>
+      <card type="MONSTER">005</card>
+      <card type="MONSTER">006</card>
+      <card type="MONSTER">007</card>
+      <card type="MONSTER">008</card>
+      <card type="MONSTER">009</card>
+    </Deck>
+    <Chest>
+      <card type="MONSTER">003</card>
+      <card type="MONSTER">004</card>
+      <card type="MONSTER">005</card>
+      <card type="MONSTER">006</card>
+      <card type="MONSTER">007</card>
+      <card type="MONSTER">008</card>
+    </Chest>
+  </npc>
+  <npc id="002">
+    <Name>Jesse</Name>
+    <Description>Jim's little brother. Knows how to play, but that's about it. Doesn't think too hard about moves.</Description>
+    <Bounty>1</Bounty>
+    <Level>0</Level>
+    <Difficulty>0</Difficulty>
+    <Text>
+      <prebattle>I won't lose to you! Only my brother can beat me!</prebattle>
+      <victory>Waaaaaaah! Jim, I lost!</victory>
+      <defeat>See! I told you I wouldn't lose.</defeat>
+    </Text>
+    <Deck>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">001</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">002</card>
+      <card type="MONSTER">009</card>
+      <card type="MONSTER">009</card>
+      <card type="MONSTER">009</card>
+      <card type="MONSTER">009</card>
+      <card type="MONSTER">009</card>
+    </Deck>
+    <Chest></Chest>
+  </npc>
+</npcs>
