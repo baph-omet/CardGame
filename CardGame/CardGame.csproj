@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SOP API">
-      <HintPath>..\..\SOP API\SOP API\bin\Debug\SOP API.dll</HintPath>
+      <HintPath>..\..\SOP-API\SOP API\bin\Debug\SOP API.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Battle.cs" />
     <Compile Include="Control.cs" />
+    <Compile Include="Scenes\CampaignScene.cs" />
     <Compile Include="Scenes\ChestScene.cs" />
     <Compile Include="Scenes\DeckScene.cs" />
     <Compile Include="Scenes\MainMenuScene.cs" />

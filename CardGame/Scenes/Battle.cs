@@ -112,8 +112,9 @@ namespace CardGame.Scenes {
                     }
                     ShowText(b.Name + "'s turn.",!(b is NPC));
                     b.HasMoved = false;
-                    if (b.PlayDeck.Count > 0) b.Draw();
-                    else {
+                    if (b.PlayDeck.Count > 0) {
+                        if (turn > 0 || Array.IndexOf(battlers, b) > 0) b.Draw();
+                    } else {
                         b.Mana -= b.MaxManaAllotment;
                         ShowText(b.Name + "'s deck is empty! " + b.Name + " takes " + b.MaxManaAllotment + " damage as punishment!");
                         if (b.Mana <= 0) break;
@@ -122,7 +123,7 @@ namespace CardGame.Scenes {
 
                     for (int i = 0; i < b.Field.GetLength(1); i++) if (b.Field[0, i] != null) ((Monster) b.Field[0, i]).CanAttack = true;
 
-                    TurnStart(this, new BattleEventArgs(b, GetOpponent(b)));
+                    TurnStart?.Invoke(this, new BattleEventArgs(b, GetOpponent(b)));
 
                     // Turn processing
                     if (b is NPC) {
@@ -140,7 +141,7 @@ namespace CardGame.Scenes {
                         ShowText(b.Name + " forfeited their turn to boost Mana consumption. Max Mana allotment for next turn is " + b.MaxManaAllotment + ".");
                     }
 
-                    TurnEnd(this, new BattleEventArgs(b, GetOpponent(b)));
+                    TurnEnd?.Invoke(this, new BattleEventArgs(b, GetOpponent(b)));
                     
                     if (b.ManaAllotment > 0) b.Mana += b.ManaAllotment;
                     else b.MaxManaAllotment++;
@@ -155,6 +156,7 @@ namespace CardGame.Scenes {
             if (winner is NPC) ShowText(winner.Name + ": " + ((NPC) winner).Text[2]);
             else if (GetOpponent(winner) is NPC) ShowText(GetOpponent(winner).Name + ": " + ((NPC) GetOpponent(winner)).Text[1]);
             UpdateSprites();
+            EndScene();
         }
 
         public Battler GetWinner() {
@@ -273,8 +275,8 @@ namespace CardGame.Scenes {
         }
 
         public Battler GetOpponent(Battler battler) {
-            foreach (Battler b in battlers) {
-                if (!b.Equals(battler)) return b;
+            foreach (Battler bt in battlers) {
+                if (!bt.Equals(battler)) return bt;
             } return null;
         }
 
@@ -520,7 +522,7 @@ namespace CardGame.Scenes {
             BattleCardEventArgs args = new BattleCardEventArgs(user,GetOpponent(user),attacker,defender,attackerIndex,defenderIndex);
             ShowText(user.Name + "'s " + attacker.Name + " attacked " + GetOpponent(user).Name + "'s " + defender.Name + "!");
             
-            MonsterAttack(this, args);
+            MonsterAttack?.Invoke(this, args);
 
             if (args.DestroyTriggerer) DestroyingMonster(args.TriggeringPlayer, (Monster) args.TriggeringCard, null, args.TriggeringCardIndex, -1);
             if (args.Cancel || args.DestroyTriggerer) return false;
@@ -543,7 +545,7 @@ namespace CardGame.Scenes {
         public bool FlippingMonster(Battler user, Monster mon, int monIndex) {
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), mon, monIndex);
 
-            FlipMonster(this, args);
+            FlipMonster?.Invoke(this, args);
 
             if (args.DestroyTriggerer) DestroyingMonster(args.TriggeringPlayer, (Monster) args.TriggeringCard, null, args.TriggeringCardIndex, -1);
             if (args.Cancel || args.DestroyTriggerer) return false;
@@ -559,7 +561,7 @@ namespace CardGame.Scenes {
         public bool StealingMana(Battler user, Monster mon, int monIndex) {
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), mon, monIndex);
 
-            ManaSteal(this,args);
+            ManaSteal?.Invoke(this,args);
 
             if (args.DestroyTriggerer) DestroyingMonster(args.TriggeringPlayer,(Monster)args.TriggeringCard,null,args.TriggeringCardIndex,-1);
             if (args.Cancel || args.DestroyTriggerer) return false;
@@ -579,13 +581,13 @@ namespace CardGame.Scenes {
             return DestroyingMonster(args);
         }
         public bool DestroyingMonster(BattleCardEventArgs args) {
-            MonsterDestroyed(this,args);
+            MonsterDestroyed?.Invoke(this,args);
 
             if (args.DestroyTriggerer) DestroyingMonster(args.TriggeringPlayer, (Monster)args.TriggeringCard, null, args.TriggeringCardIndex, -1);
             if (args.Cancel || args.DestroyTriggerer) return false;
 
             ShowText(args.NonTriggeringPlayer.Name + "'s " + args.TargetedCard.Name + " was destroyed!");
-            args.TriggeringPlayer.RetireMonster(args.TargetedCardIndex);
+            args.NonTriggeringPlayer.RetireMonster(args.TargetedCardIndex);
 
             return true;
         }
@@ -593,7 +595,7 @@ namespace CardGame.Scenes {
         public bool SettingMonster(Battler user, Monster setMon, int setMonIndex) {
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), setMon,setMonIndex);
 
-            SetMonster(this, args);
+            SetMonster?.Invoke(this, args);
 
             if (args.DestroyTriggerer) args.TriggeringPlayer.RetireMonster(args.TriggeringCardIndex);
             if (args.Cancel || args.DestroyTriggerer) return false;
@@ -606,7 +608,7 @@ namespace CardGame.Scenes {
         public bool SettingSpell(Battler user, Spell setSpl, int setSplIndex) {
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), setSpl);
 
-            SetSpell(this, args);
+            SetSpell?.Invoke(this, args);
 
             if (args.DestroyTriggerer) args.TriggeringPlayer.RemoveSpell(args.TriggeringCardIndex);
             if (args.Cancel || args.DestroyTriggerer) return false;
@@ -661,7 +663,7 @@ namespace CardGame.Scenes {
         public bool ActivatingSpell(Battler user, Spell spl, int splIndex) {
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), spl, splIndex);
 
-            SpellActivate(this, args);
+            SpellActivate?.Invoke(this, args);
 
             if (args.DestroyTriggerer || (args.Cancel && spl.SpellType != SpellType.CONTINUOUS)) DestroyingSpell(args.NonTriggeringPlayer, args.TargetedCard, args.TriggeringCard, args.TargetedCardIndex, args.TriggeringCardIndex);
             if (args.Cancel || args.DestroyTriggerer) return false;
@@ -678,7 +680,7 @@ namespace CardGame.Scenes {
         public bool DestroyingSpell(Battler user, Card triggerer, Card target, int triggererindex, int targetindex) {
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), triggerer, target, triggererindex, targetindex);
 
-            SpellDestroyed(this,args);
+            SpellDestroyed?.Invoke(this,args);
 
             if (args.DestroyTriggerer) DestroyingSpell(args.NonTriggeringPlayer, args.DestroyingCard, args.TriggeringCard, args.DestroyingCardIndex, args.TriggeringCardIndex);
             if (args.DestroyTriggerer || args.Cancel) return false;
@@ -737,7 +739,7 @@ namespace CardGame.Scenes {
         public bool ChangingMana(Battler target, int amount) {
             BattleManaEventArgs args = new BattleManaEventArgs(target, GetOpponent(target),amount);
 
-            ManaChange(this, args);
+            ManaChange?.Invoke(this, args);
 
             if (args.Cancel) return false;
 
@@ -753,7 +755,7 @@ namespace CardGame.Scenes {
             }
 
             BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user),card);
-            Draw(this, args);
+            Draw?.Invoke(this, args);
             if (args.Cancel) return false;
             user.Draw(card);
             return true;

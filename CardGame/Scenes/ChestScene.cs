@@ -10,11 +10,11 @@ namespace CardGame.Scenes {
         protected static SortedDictionary<int, int> Chest;
         protected static SortedDictionary<int, int> Deck;
 
-        protected static string title = "Chest";
+        protected static string Title = "Chest";
 
         protected bool SpellMode;
 
-        public ChestScene(bool spellMode) : base(title, (spellMode ? "Spells:" : "Monsters:")) {
+        public ChestScene(bool spellMode) : base(Title, (spellMode ? "Spells:" : "Monsters:")) {
             Chest = new SortedDictionary<int, int>();
             Deck = new SortedDictionary<int, int>();
             SpellMode = spellMode;

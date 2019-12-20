@@ -12,7 +12,7 @@ namespace CardGame {
 
         public static Scene Scene;
         public static bool Running;
-        public static int[] WindowSize = { 50, 65 };
+        public static int[] WindowSize = { 50, 63 };
 
         public static Player ActivePlayer;
 
@@ -21,6 +21,7 @@ namespace CardGame {
         /// </summary>
         [STAThread]
         static void Main() {
+            //playerWriteTest();
             Console.SetWindowSize(WindowSize[0],WindowSize[1]);
             Console.SetWindowPosition(0, 0);
             Console.CursorVisible = false;
@@ -49,11 +50,11 @@ namespace CardGame {
         }
 
         static void playerWriteTest() {
-            List<Player> players = Player.GetAllPlayers();
+            //List<Player> players = Player.GetAllPlayers();
 
-            //List<Player> players = new List<Player>();
-            //players.Add(new Player(0));
-            //players.Add(new Player(1));
+            List<Player> players = new List<Player>();
+            players.Add(new Player());
+            players.Add(new Player());
 
             Player.WriteAllPlayers(players);
         }

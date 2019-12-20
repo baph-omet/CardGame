@@ -10,8 +10,8 @@ namespace CardGame.Scenes {
 
         private static Dictionary<string, Action> InitializeChoices() {
             Dictionary<string, Action> d = new Dictionary<string, Action>();
+            if (Player.GetAllPlayers().Count > 1) d.Add("Load Game", LoadGame);
             d.Add("New Game", NewGame);
-            d.Add("Load Game", LoadGame);
             d.Add("Test Battle", TestBattle);
             //d.Add("Format Player File", FormatPlayerFile);
             d.Add("Quit", Quit);
@@ -23,7 +23,7 @@ namespace CardGame.Scenes {
         }
 
         public static void TestBattle() {
-            Player player = Player.GetPlayer(1);
+            Player player = Player.GetPlayer(0);
             NPC opponent = NPC.GetNPC(1);
             Battle b = new Battle(player, opponent);
             b.Update();

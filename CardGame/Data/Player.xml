@@ -1,25 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<players>
-  <player id="000">
-    <name>Default</name>
-    <wins>0</wins>
-    <losses>0</losses>
-    <level>0</level>
-    <chest>
-      <card type="MONSTER">001</card>
-      <card type="MONSTER">001</card>
-      <card type="MONSTER">001</card>
-      <card type="MONSTER">002</card>
-      <card type="MONSTER">002</card>
-      <card type="MONSTER">002</card>
-      <card type="MONSTER">003</card>
-      <card type="MONSTER">004</card>
-      <card type="MONSTER">005</card>
-      <card type="MONSTER">006</card>
-      <card type="MONSTER">007</card>
-      <card type="MONSTER">008</card>
-      <card type="MONSTER">009</card>
-    </chest>
+﻿<?xml version="1.0"?>
+<ArrayOfPlayer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Player id="0">
+    <name>Sarah</name>
     <deck>
       <card type="MONSTER">001</card>
       <card type="MONSTER">001</card>
@@ -35,12 +17,19 @@
       <card type="MONSTER">008</card>
       <card type="MONSTER">009</card>
     </deck>
-  </player>
-  <player id="001">
-    <name>Nathan</name>
-    <wins>0</wins>
-    <losses>0</losses>
-    <level>0</level>
+    <Record>
+      <BattleRecord id="1">
+        <Wins>0</Wins>
+        <Losses>0</Losses>
+        <Ties>0</Ties>
+      </BattleRecord>
+      <BattleRecord id="2">
+        <Wins>0</Wins>
+        <Losses>0</Losses>
+        <Ties>0</Ties>
+      </BattleRecord>
+    </Record>
+    <Level>0</Level>
     <chest>
       <card type="MONSTER">001</card>
       <card type="MONSTER">001</card>
@@ -56,21 +45,5 @@
       <card type="MONSTER">008</card>
       <card type="MONSTER">009</card>
     </chest>
-    <deck>
-      <card type="MONSTER">001</card>
-      <card type="MONSTER">001</card>
-      <card type="MONSTER">001</card>
-      <card type="MONSTER">002</card>
-      <card type="MONSTER">002</card>
-      <card type="MONSTER">002</card>
-      <card type="MONSTER">003</card>
-      <card type="MONSTER">004</card>
-      <card type="MONSTER">005</card>
-      <card type="MONSTER">006</card>
-      <card type="MONSTER">007</card>
-      <card type="MONSTER">008</card>
-      <card type="MONSTER">009</card>
-      <card type="MONSTER">010</card>
-    </deck>
-  </player>
-</players>
+  </Player>
+</ArrayOfPlayer>

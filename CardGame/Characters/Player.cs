@@ -42,11 +42,14 @@ namespace CardGame.Characters{
         public List<Card> Chest;
 
         public Player() {
-            this.Level = 0;
-            this.Deck = new List<Card>();
-            this.Chest = new List<Card>();
+            Level = 0;
+            NPC defaultPlayer = NPC.GetNPC(1);
+            Deck = new List<Card>();
+            Deck.AddRange(defaultPlayer.Deck);
+            Chest = new List<Card>();
+            Chest.AddRange(defaultPlayer.Chest);
             Record = BattleRecord.GetBlankRecord();
-
+            Name = "Anonymous";
         }
 
         public void Save() {
@@ -109,7 +112,7 @@ namespace CardGame.Characters{
         private static int GetNextID() {
             XmlDocument doc = new XmlDocument();
             
-            doc.Load("Players.xml");
+            doc.Load(Directory.GetCurrentDirectory() + "/Data/Player.xml");
 
             int highest = 0;
 
@@ -123,12 +126,12 @@ namespace CardGame.Characters{
 
         public static void WriteAllPlayers(List<Player> players) {
             XmlSerializer serializer = new XmlSerializer(players.GetType());
-            using(FileStream stream = new FileStream("Players.xml", FileMode.Create)) serializer.Serialize(stream, players);
+            using(FileStream stream = new FileStream(Directory.GetCurrentDirectory() + "/Data/Player.xml", FileMode.Create)) serializer.Serialize(stream, players);
         }
 
         public static List<Player> GetAllPlayers() {
             List<Player> players = new List<Player>();
-            XmlReader reader = new XmlTextReader(Directory.GetCurrentDirectory() + "\\Players.xml");
+            XmlReader reader = new XmlTextReader(Directory.GetCurrentDirectory() + "\\Data\\Player.xml");
             XmlSerializer serializer = new XmlSerializer(players.GetType());
             players = (List<Player>) serializer.Deserialize(reader);
 

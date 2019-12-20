@@ -8,7 +8,7 @@ using CardGame.UI;
 namespace CardGame.Scenes {
     public class DeckScene : ChestScene {
 
-        protected static new string title = "Deck";
+        protected static string Title = "Deck";
 
         public DeckScene(bool spellMode) : base(spellMode) { }
 

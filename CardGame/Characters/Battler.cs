@@ -35,48 +35,48 @@ namespace CardGame.Characters {
         }
 
         public void Initialize() {
-            this.Mana = 50;
-            this.MaxManaAllotment = 1;
-            this.ManaAllotment = 0;
-            this.Field = new Card[2, 5];
-            this.Hand = new List<Card>();
-            this.Discard = new List<Card>();
-            this.PlayDeck = new List<Card>(this.Deck);
-            this.HasMoved = false;
-            for (int i = 0; i < 5; i++) this.Draw();
+            Mana = 50;
+            MaxManaAllotment = 1;
+            ManaAllotment = 0;
+            Field = new Card[2, 5];
+            Hand = new List<Card>();
+            Discard = new List<Card>();
+            PlayDeck = new List<Card>(Deck);
+            HasMoved = false;
+            for (int i = 0; i < 5; i++) Draw();
         }
 
         public void Draw() {
             Draw(null);
         }
         public void Draw(Card card) {
+            if (card == null) {
+                Random random = new Random();
+                card = PlayDeck[random.Next(PlayDeck.Count)];
+            }
             if (PlayDeck.Count > 0 && Hand.Count < 10 && PlayDeck.Contains(card)) {
-                if (card == null) {
-                    Random random = new Random();
-                    card = PlayDeck[random.Next(PlayDeck.Count)];
-                }
                 Hand.Add(card);
                 PlayDeck.Remove(card);
             }
         }
 
         public bool Summon(Monster monster, int fieldIndex) {
-            if (this.Hand.Contains(monster) && Field[0,fieldIndex] == null && ManaAllotment >= monster.Level) {
+            if (Hand.Contains(monster) && Field[0,fieldIndex] == null && ManaAllotment >= monster.Level) {
                 Field[0,fieldIndex] = monster;
                 Hand.Remove(monster);
                 ManaAllotment -= monster.Level;
-                this.HasMoved = true;
+                HasMoved = true;
                 return true;
             } else return false;
         }
 
         public bool Withdraw(Monster monster) {
-            for (int i = 0;i< this.Field.GetLength(0);i++) {
-                if (this.Field[0,i].Equals(monster)) {
-                    this.Hand.Add(monster);
-                    this.Field[0, i] = null;
-                    this.ManaAllotment += monster.Level;
-                    this.HasMoved = true;
+            for (int i = 0;i< Field.GetLength(0);i++) {
+                if (Field[0,i].Equals(monster)) {
+                    Hand.Add(monster);
+                    Field[0, i] = null;
+                    ManaAllotment += monster.Level;
+                    HasMoved = true;
                     return true;
                 }
             } return false;
@@ -115,9 +115,9 @@ namespace CardGame.Characters {
         public void StealMana(Monster attacker, Battler opponent) {
             if (CanStealMana(opponent) && attacker.CanAttack) {
                 opponent.Mana -= attacker.Level;
-                this.Mana += attacker.Level;
+                Mana += attacker.Level;
                 attacker.CanAttack = false;
-                this.HasMoved = true;
+                HasMoved = true;
             }
         }
 
@@ -134,7 +134,7 @@ namespace CardGame.Characters {
             //TODO: Sacrifice monsters to play better monsters
             if (!AllMonsterZonesFull()) {
                 foreach (Card c in Hand) {
-                    if (c.Level <= this.ManaAllotment && c.WillPlay) return true;
+                    if (c.Level <= ManaAllotment && c.WillPlay) return true;
                 }
             }
             for (int i = 0; i < Field.GetLength(1); i++) {

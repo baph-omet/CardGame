@@ -8,9 +8,18 @@ namespace CardGame.Scenes {
     public class TextScene : Scene {
         public string Title;
         public string[] Texts;
-        private Dictionary<string, Action> Choices;
+        protected Dictionary<string, Action> Choices;
         
         protected int TextIndex;
+        protected int ChoiceIndex {
+            get {
+                return ((TextBox)SpriteHash["TextBox"]).Index;
+            } set {
+                if (value >= Choices.Count) value = 0;
+                if (value < 0) value = Choices.Count - 1;
+                ((TextBox)SpriteHash["TextBox"]).Index = value;
+            }
+        }
 
         public TextScene(string title) : this(title, "") { Texts = null; }
         public TextScene(string title, string text) : this(title, text, new Dictionary<string, Action>()) { }
@@ -26,7 +35,6 @@ namespace CardGame.Scenes {
         }
 
         public override void Update() {
-            int ChoiceIndex = ((TextBox) SpriteHash["TextBox"]).Index;
             switch (Control.getKey().Key) {
                 case ConsoleKey.DownArrow:
                     if (ChoicesAvailable()) {
@@ -66,10 +74,8 @@ namespace CardGame.Scenes {
                                 }
                             }
                             if (negativeAction != null) break;
-                        }
-                        if (negativeAction != null) negativeAction();
-                    }
-                    break;
+                        } negativeAction?.Invoke();
+                    } break;
             }
             ((TextBox) SpriteHash["TextBox"]).Index = ChoiceIndex;
         }

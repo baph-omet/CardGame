@@ -15,16 +15,17 @@ namespace CardGame.Scenes {
             AddChoice("Quit", QuitToMenu);
         }
         
-        public static void StartCampaign() {
+        public void StartCampaign() {
             //TODO: Go to campaign screen
+            AddSubscene(new CampaignScene());
         }
 
-        public static void OpenDeck() {
-            Program.Scene.AddSubscene(new DeckScene(false));
+        public void OpenDeck() {
+            AddSubscene(new DeckScene(false));
         }
 
-        public static void OpenChest() {
-            Program.Scene.AddSubscene(new ChestScene(false));
+        public void OpenChest() {
+            AddSubscene(new ChestScene(false));
         }
 
         public static void ShowPlayerInfo() {
@@ -48,11 +49,11 @@ namespace CardGame.Scenes {
             Program.Scene.AddSubscene(new TextScene("Player Stats", pText.ToString()));
         }
 
-        public static void QuitToMenu() {
+        public void QuitToMenu() {
             TextScene confirm = new TextScene("Warning", "Are you sure you want to quit?");
             confirm.AddChoice("Yes", delegate() { Program.Scene = new TitleScene(); });
             confirm.AddChoice("No", delegate() { confirm.EndScene(); });
-            Program.Scene.AddSubscene(confirm);
+            AddSubscene(confirm);
         }
     }
 }
