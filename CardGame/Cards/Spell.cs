@@ -64,6 +64,7 @@ namespace CardGame.Cards {
         [XmlIgnore]
         public int TriggerAmount { get { return triggeramount; } }
 
+        [XmlIgnore]
         public bool Activated = false;
 
         public Spell() : this(0) {}
