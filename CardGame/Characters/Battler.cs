@@ -108,8 +108,13 @@ namespace CardGame.Characters {
         }
 
         public void SetSpell(Spell spell, int fieldIndex) {
-            Field[1, fieldIndex] = spell;
-            Field[1, fieldIndex].Facedown = true;
+            if (Hand.Contains(spell) && Field[1, fieldIndex] == null && ManaAllotment >= spell.Level) {
+                Field[1, fieldIndex] = spell;
+                Field[1, fieldIndex].Facedown = true;
+                HasMoved = true;
+                Hand.Remove(spell);
+                ManaAllotment -= spell.Level;
+            }
         }
 
         public void StealMana(Monster attacker, Battler opponent) {

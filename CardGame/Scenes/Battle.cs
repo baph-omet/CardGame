@@ -378,66 +378,84 @@ namespace CardGame.Scenes {
                         MoveCursor(0, -1);
                         break;
                     case ConsoleKey.Home:
+                        // Automatic turn
                         AITurn(b);
                         break;
                     case ConsoleKey.End:
+                        // End turn
                         heldCard = null;
                         turnEnded = true;
                         break;
                     case ConsoleKey.PageDown:
-                        if (heldCard != null) {
-                            if (heldCard is Monster && cursorLocation[0] == 2) {
-                                Monster mon = (Monster) heldCard;
-                                if (b.Field[0, cursorLocation[1]] == null) {
-                                    if (b.ManaAllotment >= mon.Level) {
-                                        SettingMonster(b, mon, cursorLocation[1]);
-                                        heldCard = null;
-                                    } else ShowText("You don't have enough Mana to summon this card!");
-                                } else ShowText("That space is occupied!");
-                            } else if (heldCard is Spell && cursorLocation[0] == 3) {
-                                Spell spl = (Spell) heldCard;
-                                if (b.Field[0, cursorLocation[1]] == null) {
-
-                                }
-                            }
+                        if (heldCard == null) break;
+                        if (heldCard is Monster && cursorLocation[0] == 2) {
+                            Monster mon = (Monster) heldCard;
+                            if (b.Field[0, cursorLocation[1]] == null) {
+                                if (b.ManaAllotment >= mon.Level) {
+                                    SettingMonster(b, mon, cursorLocation[1]);
+                                    heldCard = null;
+                                } else ShowText("You don't have enough Mana to summon this card!");
+                            } else ShowText("That space is occupied!");
+                        } else if (heldCard is Spell && cursorLocation[0] == 3) {
+                            Spell spl = (Spell) heldCard;
+                            if (b.Field[1, cursorLocation[1]] == null) {
+                                if (b.ManaAllotment >= spl.Level) {
+                                    SettingSpell(b, spl, cursorLocation[1]);
+                                    heldCard = null;
+                                } else ShowText("You don't have enough Mana to set this card!");
+                            } else ShowText("There's already a spell in that slot.");
                         }
                         break;
                     case ConsoleKey.Enter:
+                        // If no card is selected...
                         if (heldCard == null) {
                             if (cursorLocation[0] > 3) {
                                 SelectCard(b.Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]]);
                             } else if (cursorLocation[0] == 2) {
-                                MonsterMenu(b,(Monster) b.Field[0, cursorLocation[1]]);
+                                MonsterMenu(b, (Monster)b.Field[0, cursorLocation[1]]);
                             }
-                        } else {
-                            if (heldCardLocation == cursorLocation) {
+                            break;
+                        }
+
+                        // If clicking selected card, deselect card
+                        if (heldCardLocation == cursorLocation) {
+                            heldCard = null;
+                            heldCardLocation = null;
+                            break;
+                        }
+
+                        // If selected card is in the hand...
+                        if (heldCardLocation[0] > 3) {
+                            // If cursor is in the hand...
+                            if (cursorLocation[0] > 3) {
+                                // Swap cards
+                                Card swapCard = b.Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]];
+                                b.Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]] = heldCard;
+                                b.Hand[(heldCardLocation[0] - 4) * 3 + heldCardLocation[1]] = swapCard;
                                 heldCard = null;
                                 heldCardLocation = null;
+                            // Else...
                             } else {
-                                if (heldCardLocation[0] > 3) {
-                                    if (cursorLocation[0] > 3) {
-                                        Card swapCard = b.Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]];
-                                        b.Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]] = heldCard;
-                                        b.Hand[(heldCardLocation[0] - 4) * 3 + heldCardLocation[1]] = swapCard;
-                                        heldCard = null;
-                                        heldCardLocation = null;
-                                    } else {
-                                        if (cursorLocation[0] == 1 && heldCard is Spell) {
-                                            //TODO: play spell
-                                        } else if (cursorLocation[0] == (b.Equals(battlers[0]) ? 2 : 1) && heldCard is Monster) {
-                                            if (b.Field[0, cursorLocation[1]] == null) {
-                                                if (b.ManaAllotment >= heldCard.Level) {
-                                                    b.Summon((Monster) heldCard, cursorLocation[1]);
-                                                    heldCard = null;
-                                                    heldCardLocation = null;
-                                                } else ShowText("You don't have enough Mana to summon this card!");
-                                            } else ShowText("That space is occupied!");
-                                        }
-                                    }
-                                } else {
-
+                                if (cursorLocation[0] == 1 && heldCard is Spell) {
+                                    Spell spl = (Spell)heldCard;
+                                    if (b.Field[1, cursorLocation[1]] == null) {
+                                        if (b.ManaAllotment >= spl.Level) {
+                                            ActivatingSpell(b, spl, cursorLocation[1]);
+                                            heldCard = null;
+                                        } else ShowText("You don't have enough Mana to set this card!");
+                                    } else ShowText("There's already a spell in that slot.");
+                                } else if (cursorLocation[0] == (b.Equals(battlers[0]) ? 2 : 1) && heldCard is Monster) {
+                                    if (b.Field[0, cursorLocation[1]] == null) {
+                                        if (b.ManaAllotment >= heldCard.Level) {
+                                            b.Summon((Monster) heldCard, cursorLocation[1]);
+                                            heldCard = null;
+                                            heldCardLocation = null;
+                                        } else ShowText("You don't have enough Mana to summon this card!");
+                                    } else ShowText("That space is occupied!");
                                 }
                             }
+                        } else {
+
                         }
                         break;
                     case ConsoleKey.Escape:
@@ -511,8 +529,6 @@ namespace CardGame.Scenes {
 
             DeselectCard();
         }
-
-        //TODO: Spell effect handling
 
         public bool MonsterAttacking(Battler user, Monster attacker, Monster defender, int attackerIndex, int defenderIndex) {
             user.HasMoved = true;
@@ -652,7 +668,7 @@ namespace CardGame.Scenes {
                     break;
             }
 
-            args.TriggeringPlayer.SetSpell(spell, args.TriggeringCardIndex);
+            args.TriggeringPlayer.SetSpell(spell, setSplIndex);
 
             return true;
         }

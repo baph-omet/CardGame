@@ -114,8 +114,8 @@ namespace CardGame.Cards {
         }
 
         public void TriggerEffects(object sender, BattleEventArgs args) {
-            //TODO: How to resolve field effects
-            //ResolveEffects((Battle)sender,args.TriggeringPlayer,args)
+            //TODO: Handle triggered effects
+            //ResolveEffects(sender,args.TriggeringPlayer,args.)
         }
     }
 }
