@@ -6,7 +6,7 @@ using CardGame.Characters;
 
 namespace CardGame.Scenes {
     class TitleScene : TextScene {
-        public TitleScene() : base("Card Game","Test text",InitializeChoices()) {}
+        public TitleScene() : base("Card Game","Welcome to the game!",InitializeChoices()) {}
 
         private static Dictionary<string, Action> InitializeChoices() {
             Dictionary<string, Action> d = new Dictionary<string, Action>();

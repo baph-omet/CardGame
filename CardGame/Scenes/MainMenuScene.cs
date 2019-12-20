@@ -16,7 +16,6 @@ namespace CardGame.Scenes {
         }
         
         public void StartCampaign() {
-            //TODO: Go to campaign screen
             AddSubscene(new CampaignScene());
         }
 
@@ -28,7 +27,7 @@ namespace CardGame.Scenes {
             AddSubscene(new ChestScene(false));
         }
 
-        public static void ShowPlayerInfo() {
+        public void ShowPlayerInfo() {
             Player p = Program.ActivePlayer;
             StringBuilder pText = new StringBuilder("Name: " + p.Name +
                 "\nLevel: " + p.Level +
@@ -46,7 +45,7 @@ namespace CardGame.Scenes {
                 + " Total: " + p.GetTotalGames(n.ID)
             );
 
-            Program.Scene.AddSubscene(new TextScene("Player Stats", pText.ToString()));
+            AddSubscene(new TextScene("Player Stats", pText.ToString()));
         }
 
         public void QuitToMenu() {

@@ -18,7 +18,7 @@ namespace CardGame.Scenes {
         private void SetUpChoices() {
             Title = "Level " + Level.ToString() + ". Choose your opponent";
             GetOpponents();
-            foreach (NPC npc in Opponents) AddChoice(npc.Name, StartBattle);
+            foreach (NPC npc in Opponents) AddChoice(npc.Name, ShowNPCDetails);
             if (Level > 0) AddChoice("Previous Level", PreviousLevel);
             if (Level < MaxLevel) AddChoice("Next Level", NextLevel);
             AddChoice("Back to Menu", EndScene);
@@ -46,6 +46,22 @@ namespace CardGame.Scenes {
         private void PreviousLevel() {
             Level--;
             SetUpChoices();
+        }
+
+        private void ShowNPCDetails() {
+            NPC npc = Opponents[ChoiceIndex];
+            Player player = Program.ActivePlayer;
+            string text =
+                npc.Name + "\n" +
+                npc.Description +
+                "\nYour record against " + npc.Name +
+                ":\nWins: " + player.GetWins(npc.ID) +
+                " Losses: " + player.GetLosses(npc.ID) +
+                " Ties: " + player.GetTies(npc.ID);
+            TextScene confirm = new TextScene(text);
+            confirm.AddChoice("Battle", delegate () { NextScene(new Battle(player, npc)); });
+            confirm.AddChoice("Cancel", delegate () { EndSubscene(); });
+            AddSubscene(confirm);
         }
     }
 }

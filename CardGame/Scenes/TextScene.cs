@@ -35,7 +35,7 @@ namespace CardGame.Scenes {
         }
 
         public override void Update() {
-            switch (Control.getKey().Key) {
+            switch (Control.GetKey().Key) {
                 case ConsoleKey.DownArrow:
                     if (ChoicesAvailable()) {
                         ChoiceIndex++;
@@ -80,7 +80,7 @@ namespace CardGame.Scenes {
             ((TextBox) SpriteHash["TextBox"]).Index = ChoiceIndex;
         }
 
-        private bool ChoicesAvailable() {
+        protected bool ChoicesAvailable() {
             return Choices != null && Choices.Keys.Count > 0 /*&& TextIndex == Texts.Length - 1*/;
         }
 

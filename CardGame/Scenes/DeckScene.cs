@@ -8,7 +8,7 @@ using CardGame.UI;
 namespace CardGame.Scenes {
     public class DeckScene : ChestScene {
 
-        protected static string Title = "Deck";
+        protected new static string Title = "Deck";
 
         public DeckScene(bool spellMode) : base(spellMode) { }
 
@@ -45,11 +45,17 @@ namespace CardGame.Scenes {
                 choices.Add("Add to Chest", delegate() { AddToChest(c); UpdateCards(); });
                 choices.Add("Back", delegate() { Program.Scene.EndSubscene(); });
 
+
+                int noInDeck = 0;
+                if (Deck.ContainsKey(c.ID)) noInDeck = Deck[c.ID];
+                int noInChest = 0;
+                if (Chest.ContainsKey(c.ID)) noInChest = Chest[c.ID];
+
                 AddChoice(
-                    "(" + id.ToString("000") + ") " + c.Name + " [" + Deck[id] + "-" + (Chest.ContainsKey(id) ? Chest[id] : 0) + "]",
+                    "(" + id.ToString("000") + ") " + c.Name + " [" + noInDeck + "-" + noInChest + "]",
                     delegate() {
                         Program.Scene.AddSubscene(
-                            new TextScene(new CardSprite(c).Render(),"What do you want to do?",choices)
+                            new TextScene(new CardSprite(c).Render() + "\nDeck: " + noInDeck + " Chest: " + noInChest, "What do you want to do?",choices)
                         );
                     }
                 );

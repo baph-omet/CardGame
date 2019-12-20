@@ -10,7 +10,7 @@ namespace CardGame.Scenes {
         protected static SortedDictionary<int, int> Chest;
         protected static SortedDictionary<int, int> Deck;
 
-        protected static string Title = "Chest";
+        protected new static string Title = "Chest";
 
         protected bool SpellMode;
 
@@ -21,11 +21,65 @@ namespace CardGame.Scenes {
             UpdateCards();
         }
 
+        public override void Update() {
+            switch (Control.GetKey().Key) {
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.RightArrow:
+                    SpellMode = !SpellMode;
+                    UpdateCards();
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (ChoicesAvailable()) {
+                        ChoiceIndex++;
+                        if (ChoiceIndex >= Choices.Count) ChoiceIndex = 0;
+                    }
+                    Rerender = true;
+                    break;
+                case ConsoleKey.UpArrow:
+                    if (ChoicesAvailable()) {
+                        ChoiceIndex--;
+                        if (ChoiceIndex < 0) ChoiceIndex = Choices.Count - 1;
+                    }
+                    Rerender = true;
+                    break;
+                case ConsoleKey.Enter:
+                    if (ChoicesAvailable()) {
+                        Action choice = Choices.Values.ToList()[ChoiceIndex];
+                        choice();
+                    } else {
+                        TextIndex++;
+                        if (TextIndex < Texts.Length) ((TextBox)SpriteHash["TextBox"]).Text = Texts[TextIndex];
+                        else if (ChoicesAvailable()) ((TextBox)SpriteHash["TextBox"]).Choices = Choices.Keys.ToArray();
+                        else EndScene();
+                    }
+                    Rerender = true;
+                    break;
+                case ConsoleKey.Escape:
+                    if (ChoicesAvailable()) {
+                        Action negativeAction = null;
+                        string[] names = new[] { "Cancel", "No", "Back", "Return", "Exit", "Quit" };
+                        foreach (string choice in Choices.Keys) {
+                            foreach (string name in names) {
+                                if (choice.Equals(name)) {
+                                    negativeAction = Choices[choice];
+                                    break;
+                                }
+                            }
+                            if (negativeAction != null) break;
+                        }
+                        negativeAction?.Invoke();
+                    }
+                    break;
+            }
+            ((TextBox)SpriteHash["TextBox"]).Index = ChoiceIndex;
+        }
+
         protected virtual void UpdateCards() {
             ClearChoices();
             Chest.Clear();
             Deck.Clear();
 
+            Title = SpellMode ? "Spells" : "Monsters";
             foreach (Card c in Program.ActivePlayer.Chest) {
                 if ((SpellMode && c is Spell) || (!SpellMode && c is Monster)) {
                     if (Chest.ContainsKey(c.ID)) Chest[c.ID]++;
@@ -54,9 +108,13 @@ namespace CardGame.Scenes {
                 choices.Add("Add to Chest", delegate() { AddToChest(c); UpdateCards(); });
                 choices.Add("Back", delegate() { Program.Scene.EndSubscene(); });
 
+                int noInDeck = 0;
+                if (Deck.ContainsKey(c.ID)) noInDeck = Deck[c.ID];
+                int noInChest = 0;
+                if (Chest.ContainsKey(c.ID)) noInChest = Chest[c.ID];
                 AddChoice(
-                    "(" + id.ToString("000") + ") " + c.Name + " [" + Chest[id] + "-" + (Deck.ContainsKey(c.ID) ? Deck[id] : 0) + "]",
-                    delegate() { AddSubscene(new TextScene(new CardSprite(c).Render(), "What do you want to do?", choices)); }
+                    "(" + id.ToString("000") + ") " + c.Name + " [" + noInChest + "-" + noInDeck + "]",
+                    delegate() { AddSubscene(new TextScene(new CardSprite(c).Render() + "\nDeck: " + noInDeck + " Chest: " + noInChest, "What do you want to do?", choices)); }
                 );
             }
 
@@ -67,6 +125,8 @@ namespace CardGame.Scenes {
             if (!Deck.ContainsKey(c.ID)) Deck.Add(c.ID, 0);
             if (Deck[c.ID] >= 3) {
                 Program.Scene.AddSubscene(new TextScene("", "You can't add any more of this card to your deck."));
+            } else if (!Chest.ContainsKey(c.ID)) {
+                Program.Scene.AddSubscene(new TextScene("", "You don't have any more of this card in your chest."));
             } else if (Chest[c.ID] > 0) {
                 bool removed = false;
                 foreach (Card ca in Program.ActivePlayer.Chest) {
@@ -84,7 +144,6 @@ namespace CardGame.Scenes {
                 Program.ActivePlayer.Deck.Add(c);
                 Deck[c.ID]++;
                 Program.Scene.AddSubscene(new TextScene("", "Added to deck."));
-                Program.Scene.EndSubscene();
                 Program.ActivePlayer.Save();
             } else {
                 Program.Scene.AddSubscene(new TextScene("", "You don't have any more to add."));
@@ -110,7 +169,6 @@ namespace CardGame.Scenes {
                 Program.ActivePlayer.Chest.Add(c);
                 Chest[c.ID]++;
                 Program.Scene.AddSubscene(new TextScene("", "Added to chest."));
-                Program.Scene.EndSubscene();
                 Program.ActivePlayer.Save();
             } else {
                 Program.Scene.AddSubscene(new TextScene("", "You don't have any more to add."));

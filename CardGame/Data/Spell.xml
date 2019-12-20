@@ -43,7 +43,7 @@
   </spell>
   <spell id="004">
     <name>Roid Rage</name>
-    <description>Increase Attack by 100 and Level by 1. Decrease Defense by 50.</description>
+    <description>Target monster. Increase Attack by 100 and Level by 1. Decrease Defense by 50.</description>
     <level>2</level>
     <type>EQUIP</type>
     <effect>

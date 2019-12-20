@@ -51,45 +51,87 @@ namespace CardGame.Cards {
             }
         }
 
-        public Monster() : this(0) { }
-        public Monster(int id) {
-            this.ID = id;
-            this.Facedown = false;
-            this.CanAttack = true;
-            this.equippedspells = new List<MonsterSpellBonus>();
-            this.nonequippedbonuses = new List<MonsterSpellBonus>();
+        public Monster() {
+            Facedown = false;
+            CanAttack = true;
+            equippedspells = new List<MonsterSpellBonus>();
+            nonequippedbonuses = new List<MonsterSpellBonus>();
 
             using (XmlReader reader = XmlReader.Create("Data/Monster.xml")) {
-                this.originalStats = new MonsterStats();
+                originalStats = new MonsterStats();
                 while (reader.Read()) {
                     if (reader.NodeType == XmlNodeType.Element) {
                         switch (reader.Name) {
                             case "card":
-                                if (reader.GetAttribute(0) != String.Format("{0:000}", id)) reader.Skip();
+                                if (reader.GetAttribute(0) != String.Format("{0:000}", ID)) reader.Skip();
                                 break;
                             case "name":
                                 reader.Read();
-                                this.Name = reader.Value;
+                                Name = reader.Value;
                                 break;
                             case "description":
                                 reader.Read();
-                                this.Description = reader.Value;
+                                Description = reader.Value;
                                 break;
                             case "attack":
                                 reader.Read();
-                                this.originalStats.Attack = Convert.ToInt32(reader.Value);
+                                originalStats.Attack = Convert.ToInt32(reader.Value);
                                 break;
                             case "defense":
                                 reader.Read();
-                                this.originalStats.Defense = Convert.ToInt32(reader.Value);
+                                originalStats.Defense = Convert.ToInt32(reader.Value);
                                 break;
                             case "level":
                                 reader.Read();
-                                this.originalStats.Level = Convert.ToInt32(reader.Value);
+                                originalStats.Level = Convert.ToInt32(reader.Value);
                                 break;
                             case "type":
                                 reader.Read();
-                                this.originalStats.Type = (MonsterType) Enum.Parse(typeof(MonsterType), reader.Value.ToUpper());
+                                originalStats.Type = (MonsterType)Enum.Parse(typeof(MonsterType), reader.Value.ToUpper());
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        public Monster(int id) {
+            ID = id;
+            Facedown = false;
+            CanAttack = true;
+            equippedspells = new List<MonsterSpellBonus>();
+            nonequippedbonuses = new List<MonsterSpellBonus>();
+
+            using (XmlReader reader = XmlReader.Create("Data/Monster.xml")) {
+                originalStats = new MonsterStats();
+                while (reader.Read()) {
+                    if (reader.NodeType == XmlNodeType.Element) {
+                        switch (reader.Name) {
+                            case "card":
+                                if (reader.GetAttribute(0) != String.Format("{0:000}", ID)) reader.Skip();
+                                break;
+                            case "name":
+                                reader.Read();
+                                Name = reader.Value;
+                                break;
+                            case "description":
+                                reader.Read();
+                                Description = reader.Value;
+                                break;
+                            case "attack":
+                                reader.Read();
+                                originalStats.Attack = Convert.ToInt32(reader.Value);
+                                break;
+                            case "defense":
+                                reader.Read();
+                                originalStats.Defense = Convert.ToInt32(reader.Value);
+                                break;
+                            case "level":
+                                reader.Read();
+                                originalStats.Level = Convert.ToInt32(reader.Value);
+                                break;
+                            case "type":
+                                reader.Read();
+                                originalStats.Type = (MonsterType) Enum.Parse(typeof(MonsterType), reader.Value.ToUpper());
                                 break;
                         }
                     }
@@ -98,17 +140,17 @@ namespace CardGame.Cards {
         }
 
         public MonsterAttackOutcome Battle(Monster target) {
-            this.Facedown = false;
-            this.CanAttack = false;
+            Facedown = false;
+            CanAttack = false;
             if (target.Facedown) target.Flip();
-            if (this.Stats.Type == MonsterTypes.GetWeakness(target.Stats.Type)) return MonsterAttackOutcome.WIN;
-            else if (target.Stats.Type == MonsterTypes.GetWeakness(this.Stats.Type)) return MonsterAttackOutcome.LOSS;
-            else if (this.Attack > target.Defense) return MonsterAttackOutcome.WIN;
+            if (Stats.Type == MonsterTypes.GetWeakness(target.Stats.Type)) return MonsterAttackOutcome.WIN;
+            else if (target.Stats.Type == MonsterTypes.GetWeakness(Stats.Type)) return MonsterAttackOutcome.LOSS;
+            else if (Attack > target.Defense) return MonsterAttackOutcome.WIN;
             else return MonsterAttackOutcome.TIE;
         }
 
         public void Flip() {
-            this.Facedown = !this.Facedown;
+            Facedown = !Facedown;
             //TODO: activate effect if one exists
         }
 

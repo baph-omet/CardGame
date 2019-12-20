@@ -113,13 +113,12 @@ namespace CardGame.Scenes {
                     ShowText(b.Name + "'s turn.",!(b is NPC));
                     b.HasMoved = false;
                     if (b.PlayDeck.Count > 0) {
-                        if (turn > 0 || Array.IndexOf(battlers, b) > 0) b.Draw();
+                        if ((turn > 0 || Array.IndexOf(battlers, b) > 0) && b.Hand.Count < 9) b.Draw();
                     } else {
                         b.Mana -= b.MaxManaAllotment;
                         ShowText(b.Name + "'s deck is empty! " + b.Name + " takes " + b.MaxManaAllotment + " damage as punishment!");
                         if (b.Mana <= 0) break;
                     }
-
 
                     for (int i = 0; i < b.Field.GetLength(1); i++) if (b.Field[0, i] != null) ((Monster) b.Field[0, i]).CanAttack = true;
 
@@ -129,6 +128,7 @@ namespace CardGame.Scenes {
                     if (b is NPC) {
                         AITurn(b);
                     } else if (b is Player) {
+                        UpdateSprites();
                         PlayerTurn(b);
                     }
                     
@@ -150,11 +150,14 @@ namespace CardGame.Scenes {
                 }
             }
 
+            //End battle
+            //TODO: Tie handling
             if (battlers[0].Mana <= 0) winner = battlers[1];
             else if (battlers[1].Mana <= 0) winner = battlers[0];
             ShowText(winner.Name + " wins!");
-            if (winner is NPC) ShowText(winner.Name + ": " + ((NPC) winner).Text[2]);
-            else if (GetOpponent(winner) is NPC) ShowText(GetOpponent(winner).Name + ": " + ((NPC) GetOpponent(winner)).Text[1]);
+
+            if (winner is Player) PlayerVictory();
+            else PlayerLoss();
             UpdateSprites();
             EndScene();
         }
@@ -189,20 +192,14 @@ namespace CardGame.Scenes {
             return null;
         }
 
-        public void ShowText(String text) {
-            ShowText(text, false);
-        }
-        public void ShowText(String text, bool anykey) {
+        public void ShowText(String text, bool anykey = false) {
             ShowText(new string[] { text }, anykey);
         }
-        public void ShowText(String[] text) {
-            ShowText(text, false);
-        }
-        public void ShowText(String[] text, bool anykey) {
+        public void ShowText(String[] text, bool anykey = false) {
             foreach (String t in text) {
                 UpdateSprites(t);
-                if (anykey) Control.waitForKey();
-                else Control.waitForKey(ConsoleKey.Enter);
+                if (anykey) Control.WaitForKey();
+                else Control.WaitForKey(ConsoleKey.Enter);
             }
         }
 
@@ -231,7 +228,7 @@ namespace CardGame.Scenes {
                     ConsoleKey.Enter
                 };
 
-                ConsoleKey pressedKey = Control.waitForKey(acceptedKeys);
+                ConsoleKey pressedKey = Control.WaitForKey(acceptedKeys);
                 switch (pressedKey) {
                     case ConsoleKey.UpArrow:
                         cursorLocation[0] -= 1;
@@ -294,7 +291,7 @@ namespace CardGame.Scenes {
             cursorLocation[0] = 1;
             UpdateSprites();
             while (true) {
-                ConsoleKey pressedKey = Control.waitForKey(acceptedKeys);
+                ConsoleKey pressedKey = Control.WaitForKey(acceptedKeys);
                 switch (pressedKey) {
                     case ConsoleKey.UpArrow:
                     case ConsoleKey.DownArrow:
@@ -366,7 +363,7 @@ namespace CardGame.Scenes {
                 ConsoleKey.Escape
             };
             while (!turnEnded) {
-                ConsoleKey pressedKey = Control.waitForKey(controls);
+                ConsoleKey pressedKey = Control.WaitForKey(controls);
                 switch (pressedKey) {
                     case ConsoleKey.DownArrow:
                         MoveCursor(1, 0);
@@ -759,6 +756,41 @@ namespace CardGame.Scenes {
             if (args.Cancel) return false;
             user.Draw(card);
             return true;
+        }
+
+        private void UpdateRecord(bool win) {
+            Player p = null;
+            foreach (Battler b in battlers) {
+                if (b is Player) {
+                    p = (Player)b;
+                    break;
+                }
+            } if (p == null) return;
+
+            if (win) p.AddWin(((NPC)GetOpponent(p)).ID);
+            else p.AddLoss(((NPC)GetOpponent(p)).ID);
+            p.Save();
+        }
+
+        private void PlayerVictory() {
+            NPC opp = (NPC)GetOpponent(winner);
+            ShowText(opp.Name + ": " + opp.Text[1]);
+
+            Random random = new Random();
+            List<Card> prizePool = new List<Card>();
+            prizePool.AddRange(opp.Deck);
+            prizePool.AddRange(opp.Chest);
+            Card prize = prizePool[random.Next(prizePool.Count)];
+
+            ShowText(new[] { "As a prize, you gained a new card: [" + prize.Name + "]!", "It was sent to your chest." });
+            Program.ActivePlayer.Chest.Add(prize);
+
+            UpdateRecord(true);
+        }
+
+        private void PlayerLoss() {
+            UpdateRecord(false);
+            ShowText(winner.Name + ": " + ((NPC)winner).Text[2]);
         }
     }
 }

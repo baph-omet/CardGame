@@ -21,10 +21,11 @@ namespace CardGame {
         /// </summary>
         [STAThread]
         static void Main() {
-            //playerWriteTest();
-            Console.SetWindowSize(WindowSize[0],WindowSize[1]);
+            Console.SetWindowSize(WindowSize[0], WindowSize[1]);
+            Console.SetBufferSize(WindowSize[0], WindowSize[1]);
             Console.SetWindowPosition(0, 0);
             Console.CursorVisible = false;
+            Console.Title = "Card Game";
             
             Initialize();
             GameLoop();
@@ -41,42 +42,5 @@ namespace CardGame {
                 else Running = false;
             }
         }
-
-        static void testBattleRender() {
-            Player player = Player.GetPlayer(0);
-            NPC opponent = NPC.GetNPC(1);
-            Battle b = new Battle(player, opponent);
-            b.Update();
-        }
-
-        static void playerWriteTest() {
-            //List<Player> players = Player.GetAllPlayers();
-
-            List<Player> players = new List<Player>();
-            players.Add(new Player());
-            players.Add(new Player());
-
-            Player.WriteAllPlayers(players);
-        }
-
-        /*static void randomCardMatchups() {
-            Random random = new Random();
-            string thingy = "";
-            while (thingy != "quit") {
-                Console.Clear();
-                Monster test = new Monster(random.Next(8) + 1);
-                Console.WriteLine();
-                Monster test2 = new Monster(random.Next(8) + 1);
-                Console.WriteLine("Attacker:");
-                Console.WriteLine(test.ToString());
-                Console.WriteLine("Defender:");
-                Console.WriteLine(test2.ToString());
-                Monster winner = test.battle(test2);
-                if (winner == null) Console.WriteLine("It's a draw!");
-                else Console.WriteLine("The winner is: " + winner.name);
-                Console.WriteLine("Type 'quit' to quit or hit ENTER to continue.");
-                thingy = Console.ReadLine();
-            }
-        }*/
     }
 }

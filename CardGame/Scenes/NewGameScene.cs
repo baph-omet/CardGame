@@ -30,9 +30,6 @@ namespace CardGame.Scenes {
                         });
                         NextScene(new MainMenuScene());
                         break;
-                    case 3:
-                        //TODO: Change scene to the game's main menu
-                        break;
                 }
             }
         }

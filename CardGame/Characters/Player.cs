@@ -43,12 +43,8 @@ namespace CardGame.Characters{
 
         public Player() {
             Level = 0;
-            NPC defaultPlayer = NPC.GetNPC(1);
             Deck = new List<Card>();
-            Deck.AddRange(defaultPlayer.Deck);
             Chest = new List<Card>();
-            Chest.AddRange(defaultPlayer.Chest);
-            Record = BattleRecord.GetBlankRecord();
             Name = "Anonymous";
         }
 
@@ -70,26 +66,32 @@ namespace CardGame.Characters{
 
         public void AddWin(int OpponentID) {
             foreach (BattleRecord br in Record) {
-                if (br.OpponentID == OpponentID) br.Wins++;
-                break;
+                if (br.OpponentID == OpponentID) {
+                    br.Wins++;
+                    Level += NPC.GetNPC(OpponentID).Bounty;
+                    break;
+                }
             }
         }
 
         public int GetWins(int OpponentID) {
             foreach (BattleRecord br in Record) if (br.OpponentID == OpponentID) return br.Wins;
-            return -1;
+            return 0;
         }
 
         public void AddLoss(int OpponentID) {
             foreach (BattleRecord br in Record) {
-                if (br.OpponentID == OpponentID) br.Losses++;
-                break;
+                if (br.OpponentID == OpponentID) {
+                    br.Losses++;
+                    Level -= NPC.GetNPC(OpponentID).Bounty;
+                    break;
+                }
             }
         }
 
         public int GetLosses(int OpponentID) {
             foreach (BattleRecord br in Record) if (br.OpponentID == OpponentID) return br.Losses;
-            return -1;
+            return 0;
         }
 
         public void AddTie(int OpponentID) {
@@ -101,7 +103,7 @@ namespace CardGame.Characters{
 
         public int GetTies(int OpponentID) {
             foreach (BattleRecord br in Record) if (br.OpponentID == OpponentID) return br.Ties;
-            return -1;
+            return 0;
         }
 
         public int GetTotalGames(int OpponentID) {
@@ -130,21 +132,20 @@ namespace CardGame.Characters{
         }
 
         public static List<Player> GetAllPlayers() {
-            List<Player> players = new List<Player>();
             XmlReader reader = new XmlTextReader(Directory.GetCurrentDirectory() + "\\Data\\Player.xml");
-            XmlSerializer serializer = new XmlSerializer(players.GetType());
-            players = (List<Player>) serializer.Deserialize(reader);
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Player>));
+            List<Player> players = (List<Player>)serializer.Deserialize(reader);
 
             foreach (Player p in players) {
-                for (int i = 0; i < p.Deck.Count; i++) {
-                    Card c = p.Deck[i];
-                    if (c is Monster) p.Deck[i] = new Monster(c.ID);
-                    else p.Deck[i] = new Spell(c.ID);
-                }
                 for (int i = 0; i < p.Chest.Count; i++) {
                     Card c = p.Chest[i];
                     if (c is Monster) p.Chest[i] = new Monster(c.ID);
-                    else p.Chest[i] = new Spell(c.ID);
+                    else if (c is Spell) p.Chest[i] = new Spell(c.ID);
+                }
+                for (int i = 0; i < p.Deck.Count; i++) {
+                    Card c = p.Deck[i];
+                    if (c is Monster) p.Deck[i] = new Monster(c.ID);
+                    else if (c is Spell) p.Deck[i] = new Spell(c.ID);
                 }
             }
 
@@ -158,7 +159,7 @@ namespace CardGame.Characters{
         }
 
         public static Player CreatePlayer(string name) {
-            Player defaultPlayer = Player.GetPlayer(0);
+            Player defaultPlayer = GetPlayer(0);
             defaultPlayer.ID = GetNextID();
             defaultPlayer.Name = name;
             defaultPlayer.Save();
@@ -166,6 +167,7 @@ namespace CardGame.Characters{
         }
 
         public override Card ChooseSpellTarget(Scenes.Battle battle, Spell spell, int spellEffectIndex) {
+            //TODO: ChooseSpellTarget(...)
             throw new NotImplementedException();
         }
     }

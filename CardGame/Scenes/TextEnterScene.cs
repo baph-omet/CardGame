@@ -24,7 +24,7 @@ namespace CardGame.Scenes {
         }
 
         public override void Update() {
-            ConsoleKeyInfo key = Control.getKey();
+            ConsoleKeyInfo key = Control.GetKey();
             if (key.Key == ConsoleKey.Enter) {
                 if (ShowingWarning()) {
                     HideWarning();
