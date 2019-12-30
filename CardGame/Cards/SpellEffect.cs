@@ -65,5 +65,9 @@ namespace CardGame.Cards {
         public SpellEffectStat EffectStat { get; set; }
 
         public int Amount { get; set; }
+
+        public List<Card> Targets { get; set; }
+
+        public bool Negated { get; set; }
     }
 }

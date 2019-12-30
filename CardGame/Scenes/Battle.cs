@@ -685,7 +685,7 @@ namespace CardGame.Scenes {
             Spell spell = (Spell)args.TriggeringCard;
 
             ShowText(args.TriggeringPlayer + " activated " + args.TriggeringCard.Name + "!");
-            spell.ResolveEffects(this, args.TriggeringPlayer, args.TriggeringCardIndex);
+            spell.ResolveEffects(this, args.TriggeringPlayer, args.TriggeringCard);
             if (spell.SpellType == SpellType.INSTANT || spell.SpellType == SpellType.COUNTER) RemovingSpell(args.TriggeringPlayer, spell, args.TriggeringCardIndex);
             return true;
         }

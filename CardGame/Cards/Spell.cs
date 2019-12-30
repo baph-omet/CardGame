@@ -50,11 +50,6 @@ namespace CardGame.Cards {
         public SpellTrigger Trigger { get { return spelltrigger; } }
 
         [XmlIgnore]
-        private List<SpellEffect> effects;
-        [XmlIgnore]
-        public List<SpellEffect> Effects { get { return effects; } }
-
-        [XmlIgnore]
         private bool voluntary;
         [XmlIgnore]
         public bool TriggerVoluntary { get { return voluntary; } }
@@ -108,15 +103,63 @@ namespace CardGame.Cards {
             }
         }
 
-        public void ResolveEffects(Battle battle, Battler owner, int fieldIndex) {
+        //TODO: Move this to Card
+        public void ResolveEffects(Battle battle, Battler owner, Card triggeringCard = null) {
             foreach (SpellEffect e in effects) {
-                Card target = owner.ChooseSpellTarget(battle, this, effects.IndexOf(e));
+                List<Card> possibleTargets = new List<Card>();
+                switch (e.TargetType) {
+                    case SpellEffectTargetType.MONSTER:
+                        if (e.Range != SpellEffectTargetRange.OPPONENT) for (int i = 0; i < owner.Field.GetLength(0); i++) if (owner.Field[0, i] != null) possibleTargets.Add(owner.Field[0, i]);
+
+                        if (e.Range != SpellEffectTargetRange.SELF) {
+                            Battler opponent = battle.GetOpponent(owner);
+                            for (int i = 0; i < opponent.Field.GetLength(0); i++) if (opponent.Field[0, i] != null) possibleTargets.Add(opponent.Field[0, i]);
+                        }
+                        break;
+                    case SpellEffectTargetType.SPELL:
+                        if (e.Range != SpellEffectTargetRange.OPPONENT) for (int i = 0; i < owner.Field.GetLength(1); i++) if (owner.Field[1, i] != null) e.Targets.Add(owner.Field[1, i]);
+
+                        if (e.Range != SpellEffectTargetRange.SELF) {
+                            Battler opponent = battle.GetOpponent(owner);
+                            for (int i = 0; i < opponent.Field.GetLength(1); i++) if (opponent.Field[1, i] != null) e.Targets.Add(opponent.Field[1, i]);
+                        }
+                        break;
+                }
+                switch (e.TargetAssignment) {
+                    case SpellEffectTargetAssignment.CHOOSE:
+                        e.Targets.Add(owner.ChooseSpellTarget(battle, this, effects.IndexOf(e)));
+                        break;
+                    case SpellEffectTargetAssignment.PREVIOUS:
+                        if (effects.IndexOf(e) > 0) e.Targets.AddRange(effects[effects.IndexOf(e) - 1].Targets);
+                        break;
+                    case SpellEffectTargetAssignment.ALL:
+                        e.Targets.AddRange(possibleTargets);
+                        break;
+                    case SpellEffectTargetAssignment.FIRST:
+                        e.Targets.Add(possibleTargets[0]);
+                        break;
+                    case SpellEffectTargetAssignment.RANDOM:
+                        Random random = new Random();
+                        e.Targets.Add(possibleTargets[random.Next(0, possibleTargets.Count)]);
+                        break;
+                    case SpellEffectTargetAssignment.TRIGGER:
+                        break;
+                }
+                
+                //TODO: Actually perform the effect
+                switch (e.Action) {
+                    case SpellEffectAction.INHIBIT:
+                        if (triggeringCard == null) break;
+                        
+                        break;
+                }
+
             }
         }
 
         public void TriggerEffects(object sender, BattleEventArgs args) {
             //TODO: Handle triggered effects
-            //ResolveEffects(sender,args.TriggeringPlayer,args.)
+            ResolveEffects((Battle)sender, args.TriggeringPlayer);
         }
     }
 }

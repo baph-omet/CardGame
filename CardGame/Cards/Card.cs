@@ -21,5 +21,15 @@ namespace CardGame.Cards {
         public Boolean Facedown;
         [XmlIgnore]
         public bool WillPlay = true;
+
+        [XmlIgnore]
+        protected List<SpellEffect> effects;
+        [XmlIgnore]
+        public List<SpellEffect> Effects { get { return effects; } }
+
+        [XmlIgnore]
+        protected int effectIndex = 0;
+        [XmlIgnore]
+        public int EffectIndex { get { return effectIndex; } }
     }
 }
