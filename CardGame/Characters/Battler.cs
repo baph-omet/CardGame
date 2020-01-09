@@ -7,7 +7,7 @@ using CardGame.Scenes;
 
 namespace CardGame.Characters {
     public abstract class Battler {
-        public String Name;
+        public string Name;
         public List<Card> Deck;
 
         [XmlIgnore]

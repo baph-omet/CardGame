@@ -35,7 +35,7 @@ namespace CardGame.Scenes {
                 "\nLosses: " + p.Losses +
                 "\nTies: " + p.Ties +
                 "\nGames Played: " + (p.Wins + p.Losses + p.Ties) +
-                "\nWin/Loss Ratio: " + String.Format("{0:0.00}", (p.Losses !=0 ? (double) p.Wins / (double) p.Losses : 0))
+                "\nWin/Loss Ratio: " + string.Format("{0:0.00}", (p.Losses !=0 ? (double) p.Wins / (double) p.Losses : 0))
             );
             pText.AppendLine();
             foreach (NPC n in NPC.GetAllNPCs()) pText.AppendLine(

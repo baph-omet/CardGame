@@ -193,18 +193,18 @@ namespace CardGame.Scenes {
             return null;
         }
 
-        public void ShowText(String text, bool anykey = false) {
+        public void ShowText(string text, bool anykey = false) {
             ShowText(new string[] { text }, anykey);
         }
-        public void ShowText(String[] text, bool anykey = false) {
-            foreach (String t in text) {
+        public void ShowText(string[] text, bool anykey = false) {
+            foreach (string t in text) {
                 UpdateSprites(t);
                 if (anykey) Control.WaitForKey();
                 else Control.WaitForKey(ConsoleKey.Enter);
             }
         }
 
-        private int ShowChoices(String prompt, String[] choices) {
+        private int ShowChoices(string prompt, string[] choices) {
             int[] previousCursorLocation = new int[2];
             cursorLocation.CopyTo(previousCursorLocation,0);
             int choice = -1;
@@ -485,7 +485,7 @@ namespace CardGame.Scenes {
             if (mon == null) return;
             SelectCard(mon);
 
-            List<String> choices = new List<string>();
+            List<string> choices = new List<string>();
             if (mon.CanAttack && !mon.Facedown && turn > 0) {
                 if (b.CanStealMana(opponent)) choices.Add("Steal Mana");
                 else choices.Add("Attack");

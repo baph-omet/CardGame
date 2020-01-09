@@ -18,7 +18,7 @@ namespace CardGame.UI {
         public string Render() {
             StringBuilder display = new StringBuilder();
             if (Battler is Player) {
-                String[, ,] handCards = new String[3, 3, 6];
+                string[, ,] handCards = new string[3, 3, 6];
 
                 for (int k = 0; k < handCards.GetLength(0); k++) {
                     for (int i = 0; i < handCards.GetLength(1); i++) {
@@ -26,7 +26,7 @@ namespace CardGame.UI {
                         if (cardIndex < Battler.Hand.Count) {
                             Card card = Battler.Hand[cardIndex];
                             handCards[k, i, 0] = " __________  ";
-                            handCards[k, i, 1] = "| " + String.Format("{0:000}", card.ID)
+                            handCards[k, i, 1] = "| " + string.Format("{0:000}", card.ID)
                                 + "-" + card.Name.Substring(0, 4) + " | ";
                             StringBuilder lvl = new StringBuilder();
                             if (card is Spell) lvl.Append("| SP-");
@@ -41,14 +41,14 @@ namespace CardGame.UI {
                             handCards[k, i, 2] = lvl.ToString();
                             if (card is Monster) {
                                 Monster mon = (Monster) card;
-                                handCards[k, i, 3] = "| ATK-" + String.Format("{0:0000}", mon.Attack) + " | ";
-                                handCards[k, i, 4] = "| DEF-" + String.Format("{0:0000}", mon.Defense) + " | ";
+                                handCards[k, i, 3] = "| ATK-" + string.Format("{0:0000}", mon.Attack) + " | ";
+                                handCards[k, i, 4] = "| DEF-" + string.Format("{0:0000}", mon.Defense) + " | ";
                             } else {
-                                String spellType;
+                                string spellType;
                                 Spell spell = (Spell) card;
                                 if (spell.SpellType.ToString().Length < 8) spellType = spell.SpellType.ToString();
                                 else spellType = spell.SpellType.ToString().Substring(0, 8);
-                                handCards[k, i, 3] = "| " + String.Format("{0,-8}", spellType.ToUpper()) + " | ";
+                                handCards[k, i, 3] = "| " + string.Format("{0,-8}", spellType.ToUpper()) + " | ";
                                 handCards[k, i, 4] = "|          | ";
                             }
                             handCards[k, i, 5] = " ----------  ";

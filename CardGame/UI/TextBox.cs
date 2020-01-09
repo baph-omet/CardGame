@@ -38,7 +38,7 @@ namespace CardGame.UI {
             for (int i = 0; i < Margin[1]; i++) buffer.AppendLine();
 
             // Title
-            if (Title != null && Title.Length > 0) buffer.AppendLine(GetLeftMargin() + String.Format("{0," + (Program.WindowSize[0] - 20) + "}", Title));
+            if (Title != null && Title.Length > 0) buffer.AppendLine(GetLeftMargin() + string.Format("{0," + (Program.WindowSize[0] - 20) + "}", Title));
 
             // Header
             buffer.Append(GetLeftMargin() + " ");
@@ -53,7 +53,7 @@ namespace CardGame.UI {
                 string[] lines = Text.Replace('\r','\0').Split('\n');
                 foreach (string line in lines) {
                     if (line.Length > Width - 4) {
-                        String[] words = line.Split(' ');
+                        string[] words = line.Split(' ');
 
                         StringBuilder message = new StringBuilder();
                         for (int i = 0; i < words.Length; i++) {
@@ -61,17 +61,17 @@ namespace CardGame.UI {
                             message.Append(words[i]);
                             if (i == words.Length - 1 || message.Length + words[i + 1].Length + 1 > Width - 4) {
                                 buffer.Append(GetLeftMargin());
-                                buffer.AppendLine("| " + String.Format("{0,-" + (Width - 4) + "}", message.ToString()) + " |");
+                                buffer.AppendLine("| " + string.Format("{0,-" + (Width - 4) + "}", message.ToString()) + " |");
                                 message.Clear();
                             }
                         }
-                    } else buffer.AppendLine(GetLeftMargin() + "| " + String.Format("{0,-" + (Width - 4) + "}", line) + " |");
+                    } else buffer.AppendLine(GetLeftMargin() + "| " + string.Format("{0,-" + (Width - 4) + "}", line) + " |");
                 }
             }
 
             // Choices
             if (Choices != null) for (int i = 0; i < Choices.Length; i++) 
-                buffer.AppendLine(GetLeftMargin() + "| " + (i == Index ? ">" : " ") + " " + String.Format("{0,-" + (Width - 6) + "}", Choices[i]) + " |");
+                buffer.AppendLine(GetLeftMargin() + "| " + (i == Index ? ">" : " ") + " " + string.Format("{0,-" + (Width - 6) + "}", Choices[i]) + " |");
 
             // Footer
             buffer.Append(GetLeftMargin() + "|");

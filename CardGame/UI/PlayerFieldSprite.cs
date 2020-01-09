@@ -30,9 +30,9 @@ namespace CardGame.UI {
                 display.Append('\n');
             } else display.AppendLine();
 
-            String[,] monsters2 = new String[2, 6];
+            string[,] monsters2 = new string[2, 6];
             monsters2[0, 0] = "|DIS|";
-            monsters2[1, 0] = "|" + String.Format("{0:000}", Battler.Discard.Count) + "|";
+            monsters2[1, 0] = "|" + string.Format("{0:000}", Battler.Discard.Count) + "|";
             for (int i = 1; i < Battler.Field.Length + 1; i++) {
                 Monster card = (Monster) Battler.Field.Monsters[i - 1];
                 if (card != null) {
@@ -40,8 +40,8 @@ namespace CardGame.UI {
                         monsters2[0, i] = "   | ? |";
                         monsters2[1, i] = "   | ? |";
                     } else {
-                        monsters2[0, i] = "   |" + String.Format("{0:000}", card.Attack) + "|";
-                        monsters2[1, i] = "   |" + String.Format("{0:000}", card.Defense) + "|";
+                        monsters2[0, i] = "   |" + string.Format("{0:000}", card.Attack) + "|";
+                        monsters2[1, i] = "   |" + string.Format("{0:000}", card.Defense) + "|";
                     }
                 } else {
                     monsters2[0, i] = "    [ ] ";
@@ -67,9 +67,9 @@ namespace CardGame.UI {
                 display.Append('\n');
             } else display.AppendLine();
 
-            String[,] spells2 = new String[2, 6];
+            string[,] spells2 = new string[2, 6];
             spells2[0, 0] = "|DEC|";
-            spells2[1, 0] = "|" + String.Format("{0:000}", Battler.PlayDeck.Count) + "|";
+            spells2[1, 0] = "|" + string.Format("{0:000}", Battler.PlayDeck.Count) + "|";
             for (int i = 1; i < Battler.Field.Length + 1; i++) {
                 Card card = Battler.Field.Spells[i - 1];
                 if (card != null) {

@@ -11,12 +11,12 @@ namespace CardGame.AI {
 
         public int difficulty = 0;
         
-        public Battler User = null;
-        public Battler Opponent = null;
+        public Battler User;
+        public Battler Opponent;
 
         public BattleAI(ref Battler user, ref Battler opponent) {
-            this.User = user;
-            this.Opponent = opponent;
+            User = user;
+            Opponent = opponent;
             if (user is NPC) difficulty = ((NPC) user).Difficulty;
             else if (user is Player) difficulty = ((Player) user).Level / 255;
         }

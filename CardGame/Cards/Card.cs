@@ -14,15 +14,21 @@ namespace CardGame.Cards {
         [XmlAttribute("id")]
         public int ID;
         [XmlIgnore]
-        public String Name;
+        public string Name;
         [XmlIgnore]
-        public String Description;
+        public string Description;
         [XmlIgnore]
         public virtual int Level { get; set; }
         [XmlIgnore]
         public Boolean Facedown;
         [XmlIgnore]
         public bool WillPlay = true;
+
+        //TODO: Set Owner and Controller properties
+        [XmlIgnore]
+        public Battler Owner { get; set; }
+        [XmlIgnore]
+        public Battler Controller { get; set; }
 
         [XmlIgnore]
         protected List<CardEffect> effects;
@@ -91,6 +97,8 @@ namespace CardGame.Cards {
                             target.Effects[target.EffectIndex].Negated = true;
                             break;
                         case CardEffectAction.KILL:
+                            if (target is Monster) battle.DestroyingMonster(Owner, this, (Monster)target, -1, -1);
+                            else battle.DestroyingSpell(Owner, this, (Spell)target, -1, -1);
                             break;
                         case CardEffectAction.MANA:
                             if (e.Targets[0] is Monster) {
@@ -101,7 +109,10 @@ namespace CardGame.Cards {
                             owner.StealMana(e.Targets[0].Level, opponent, true);
                             break;
                         case CardEffectAction.STAT:
-
+                            if (target is Monster) {
+                                Monster m = (Monster)target;
+                                m.EquippedSpells.Add(new MonsterSpellBonus(Owner, -1, new MonsterStats(e.EffectStat == CardEffectStat.ATTACK ? e.Amount : 0, e.EffectStat == CardEffectStat.DEFENSE ? e.Amount : 0, e.EffectStat == CardEffectStat.LEVEL ? e.Amount : 0, m.Type)));
+                            }
                             break;
                         case CardEffectAction.VIEW:
                             break;

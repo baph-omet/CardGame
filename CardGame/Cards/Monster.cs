@@ -63,7 +63,7 @@ namespace CardGame.Cards {
                     if (reader.NodeType == XmlNodeType.Element) {
                         switch (reader.Name) {
                             case "card":
-                                if (reader.GetAttribute(0) != String.Format("{0:000}", ID)) reader.Skip();
+                                if (reader.GetAttribute(0) != string.Format("{0:000}", ID)) reader.Skip();
                                 break;
                             case "name":
                                 reader.Read();
@@ -107,7 +107,7 @@ namespace CardGame.Cards {
                     if (reader.NodeType == XmlNodeType.Element) {
                         switch (reader.Name) {
                             case "card":
-                                if (reader.GetAttribute(0) != String.Format("{0:000}", ID)) reader.Skip();
+                                if (reader.GetAttribute(0) != string.Format("{0:000}", ID)) reader.Skip();
                                 break;
                             case "name":
                                 reader.Read();
@@ -152,17 +152,18 @@ namespace CardGame.Cards {
         public void Flip() {
             Facedown = !Facedown;
             //TODO: activate effect if one exists
+            if (Effects.Count > 0) { }
         }
 
-        public override String ToString() {
+        public override string ToString() {
             StringBuilder str = new StringBuilder();
             StringBuilder lvl = new StringBuilder();
-            str.AppendLine("(" + String.Format("{0:000}", ID) + ") " + Name + ":");
+            str.AppendLine("(" + string.Format("{0:000}", ID) + ") " + Name + ":");
             for (int i = 0; i < Level; i++) lvl.Append("*");
             str.Append('\n');
             str.AppendLine("| " + Stats.Type + " - " + lvl.ToString());
-            str.AppendLine("| Attack:  " + String.Format("{0:0000}", Attack));
-            str.AppendLine("| Defense: " + String.Format("{0:0000}", Defense));
+            str.AppendLine("| Attack:  " + string.Format("{0:0000}", Attack));
+            str.AppendLine("| Defense: " + string.Format("{0:0000}", Defense));
             str.AppendLine("| " + Description);
 
             return str.ToString();

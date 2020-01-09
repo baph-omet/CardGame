@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using System.Xml;
 using CardGame.Cards;
+using CardGame.Scenes;
 
 namespace CardGame.Characters {
     class NPC : Battler {
         public int ID;
-        public String Description;
+        public string Description;
         public int Bounty;
         public int Level;
         public int Difficulty;
-        public String[] Text;
+        public string[] Text;
 
         public List<Card> Chest;
 
         public NPC(int id, string name, string description, int bounty, int level, int difficulty, string[] texts, List<Card> chest, List<Card> deck) : base() {
-            this.ID = id;
-            this.Name = name;
-            this.Description = description;
-            this.Bounty = bounty;
-            this.Level = level;
-            this.Difficulty = difficulty;
+            ID = id;
+            Name = name;
+            Description = description;
+            Bounty = bounty;
+            Level = level;
+            Difficulty = difficulty;
             Text = texts;
-            this.Chest = chest;
-            this.Deck = deck;
+            Chest = chest;
+            Deck = deck;
         }
 
         public static List<NPC> GetAllNPCs() {
@@ -93,7 +94,7 @@ namespace CardGame.Characters {
             return null;
         }
 
-        public override Card ChooseSpellTarget(Scenes.Battle battle, Spell spell, int spellEffectIndex) {
+        public override Card ChooseEffectTarget(Battle battle, Card spell, int spellEffectIndex) {
             throw new NotImplementedException();
         }
     }

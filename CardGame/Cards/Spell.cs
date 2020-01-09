@@ -64,7 +64,7 @@ namespace CardGame.Cards {
 
         public Spell() : this(0) {}
         public Spell(int id) {
-            this.ID = id;
+            ID = id;
             XMLFile file = new XMLFile("Data/Spell.xml");
             foreach (XMLSection spell in file.GetSections()[0].GetSections("spell")) {
                 if (Convert.ToInt32(spell.GetAttribute("id")) == id) {
@@ -76,7 +76,7 @@ namespace CardGame.Cards {
                     spelltrigger = (SpellTrigger) spell.GetEnum("trigger",SpellTrigger.IMMEDIATE);
                     triggeramount = spell.Get("triggeramount",0);
 
-                    this.effects = new List<CardEffect>();
+                    effects = new List<CardEffect>();
                     foreach (XMLSection e in spell.GetSections("effect")) {
                         CardEffect effect = new CardEffect();
                         effect.TargetType = e.GetEnum<CardEffectTargetType>("target");
