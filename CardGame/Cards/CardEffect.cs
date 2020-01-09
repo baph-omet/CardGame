@@ -6,7 +6,7 @@ using CardGame.Scenes;
 using CardGame.Characters;
 
 namespace CardGame.Cards {
-    public enum SpellEffectAction {
+    public enum CardEffectAction {
         MANA,
         STAT,
         VIEW,
@@ -14,7 +14,7 @@ namespace CardGame.Cards {
         INHIBIT
     }
 
-    public enum SpellEffectStat {
+    public enum CardEffectStat {
         DEFENSE,
         ATTACK,
         CATEGORY,
@@ -27,13 +27,13 @@ namespace CardGame.Cards {
         NULL
     }
 
-    public enum SpellEffectTargetRange {
+    public enum CardEffectTargetRange {
         SELF,
         OPPONENT,
         ANY
     }
 
-    public enum SpellEffectTargetAssignment {
+    public enum CardEffectTargetAssignment {
         CHOOSE,
         RANDOM,
         FIRST,
@@ -42,7 +42,7 @@ namespace CardGame.Cards {
         TRIGGER
     }
 
-    public enum SpellEffectTargetType {
+    public enum CardEffectTargetType {
         MONSTER,
         SPELL,
         MANA,
@@ -51,23 +51,31 @@ namespace CardGame.Cards {
         DISCARD
     }
 
-    public class SpellEffect {
-        public SpellEffectAction Action { get; set; }
+    public class CardEffect {
+        public CardEffectAction Action { get; set; }
 
-        public SpellEffectTargetType TargetType { get; set; }
+        public CardEffectTargetType TargetType { get; set; }
 
-        public SpellEffectTargetRange Range { get; set; }
+        public CardEffectTargetRange Range { get; set; }
 
-        public SpellEffectTargetAssignment TargetAssignment { get; set; }
+        public CardEffectTargetAssignment TargetAssignment { get; set; }
 
-        public List<SpellEffectTargetRequirement> Requirements { get; set; }
+        public List<CardEffectTargetRequirement> Requirements { get; set; }
 
-        public SpellEffectStat EffectStat { get; set; }
+        public CardEffectStat EffectStat { get; set; }
 
         public int Amount { get; set; }
 
         public List<Card> Targets { get; set; }
 
         public bool Negated { get; set; }
+    }
+
+    public struct CardEffectTargetRequirement {
+        public CardEffectStat Stat { get; set; }
+
+        public int Minimum { get; set; }
+
+        public int Maximum { get; set; }
     }
 }

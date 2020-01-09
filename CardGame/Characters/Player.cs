@@ -166,7 +166,7 @@ namespace CardGame.Characters{
             return defaultPlayer;
         }
 
-        public override Card ChooseSpellTarget(Scenes.Battle battle, Spell spell, int spellEffectIndex) {
+        public override Card ChooseEffectTarget(Scenes.Battle battle, Card card, int spellEffectIndex) {
             //TODO: ChooseSpellTarget(...)
             throw new NotImplementedException();
         }

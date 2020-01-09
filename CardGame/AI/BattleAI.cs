@@ -23,9 +23,9 @@ namespace CardGame.AI {
 
         public int GetHighestOpponentAttack() {
             int highest = 0;
-            for (int i = 0; i < Opponent.Field.GetLength(1); i++) {
-                if (Opponent.Field[0, i] != null) {
-                    Monster mon = (Monster) Opponent.Field[0, i];
+            for (int i = 0; i < Opponent.Field.Length; i++) {
+                if (Opponent.Field.Monsters[i] != null) {
+                    Monster mon = (Monster) Opponent.Field.Monsters[i];
                     if (mon.Attack > highest) highest = mon.Attack;
                 }
             } return highest;
@@ -33,9 +33,9 @@ namespace CardGame.AI {
 
         public int GetHighestOpponentDefense() {
             int highest = 0;
-            for (int i = 0; i < Opponent.Field.GetLength(1); i++) {
-                if (Opponent.Field[0, i] != null) {
-                    Monster mon = (Monster) Opponent.Field[0, i];
+            for (int i = 0; i < Opponent.Field.Length; i++) {
+                if (Opponent.Field.Monsters[i] != null) {
+                    Monster mon = (Monster) Opponent.Field.Monsters[i];
                     if (mon.Defense > highest) highest = mon.Defense;
                 }
             } return highest;
@@ -61,18 +61,18 @@ namespace CardGame.AI {
 
         public List<int> GetUntappedSummons() {
             List<int> moves = new List<int>();
-            for (int i = 0; i < User.Field.GetLength(1); i++) {
-                if (User.Field[0, i] != null) moves.Add(i);
+            for (int i = 0; i < User.Field.Length; i++) {
+                if (User.Field.Monsters[i] != null) moves.Add(i);
             } return moves;
         }
 
         public List<int> GetViableTargets(int monsterIndex) {
             List<int> targets = new List<int>();
-            Monster mon = (Monster)User.Field[0,monsterIndex];
+            Monster mon = (Monster)User.Field.Monsters[monsterIndex];
             if (mon != null) {
-                for (int i = 0; i < Opponent.Field.GetLength(1); i++) {
-                    if (Opponent.Field[0, i] != null) {
-                        Monster target = (Monster) Opponent.Field[0, i];
+                for (int i = 0; i < Opponent.Field.Length; i++) {
+                    if (Opponent.Field.Monsters[i] != null) {
+                        Monster target = (Monster) Opponent.Field.Monsters[i];
                         if (target.Defense < mon.Attack || MonsterTypes.GetWeakness(target.Type) == mon.Type) targets.Add(i);
                     }
                 }
@@ -80,11 +80,11 @@ namespace CardGame.AI {
         }
 
         public int GetBestTarget(int monsterIndex) {
-            Monster mon = (Monster)User.Field[0,monsterIndex];
+            Monster mon = (Monster)User.Field.Monsters[monsterIndex];
             int targetIndex = -1;
             int strongest = 0;
             foreach (int i in GetViableTargets(monsterIndex)) {
-                Monster target = (Monster) Opponent.Field[0, i];
+                Monster target = (Monster) Opponent.Field.Monsters[i];
                 if (target.Attack > strongest || MonsterTypes.GetWeakness(target.Type) == mon.Type) {
                     strongest = target.Attack;
                     targetIndex = i;
@@ -93,8 +93,8 @@ namespace CardGame.AI {
         }
 
         public int GetFirstOpenMonsterZone() {
-            for (int i = 0; i < User.Field.GetLength(1); i++) {
-                if (User.Field[0, i] == null) return i;
+            for (int i = 0; i < User.Field.Length; i++) {
+                if (User.Field.Monsters[i] == null) return i;
             } return -1;
         }
 

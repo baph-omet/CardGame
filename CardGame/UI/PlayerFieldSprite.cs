@@ -24,7 +24,7 @@ namespace CardGame.UI {
                 for (int i = 0; i <= cursorLocation[1]; i++) {
                     if (i == cursorLocation[1]) {
                         display.Append("  v  ");
-                        // selected = Battler.field[0, i];
+                        // selected = Battler.Field.Monsters[i];
                     } else display.Append("        ");
                 }
                 display.Append('\n');
@@ -33,8 +33,8 @@ namespace CardGame.UI {
             String[,] monsters2 = new String[2, 6];
             monsters2[0, 0] = "|DIS|";
             monsters2[1, 0] = "|" + String.Format("{0:000}", Battler.Discard.Count) + "|";
-            for (int i = 1; i < Battler.Field.GetLength(1) + 1; i++) {
-                Monster card = (Monster) Battler.Field[0, i - 1];
+            for (int i = 1; i < Battler.Field.Length + 1; i++) {
+                Monster card = (Monster) Battler.Field.Monsters[i - 1];
                 if (card != null) {
                     if (card.Facedown) {
                         monsters2[0, i] = "   | ? |";
@@ -61,7 +61,7 @@ namespace CardGame.UI {
                 for (int i = 0; i <= cursorLocation[1]; i++) {
                     if (i == cursorLocation[1]) {
                         display.Append("  v  ");
-                        // selected = Battler.field[1, i];
+                        // selected = Battler.Field.Spells[i];
                     } else display.Append("        ");
                 }
                 display.Append('\n');
@@ -70,8 +70,8 @@ namespace CardGame.UI {
             String[,] spells2 = new String[2, 6];
             spells2[0, 0] = "|DEC|";
             spells2[1, 0] = "|" + String.Format("{0:000}", Battler.PlayDeck.Count) + "|";
-            for (int i = 1; i < Battler.Field.GetLength(1) + 1; i++) {
-                Card card = Battler.Field[1, i - 1];
+            for (int i = 1; i < Battler.Field.Length + 1; i++) {
+                Card card = Battler.Field.Spells[i - 1];
                 if (card != null) {
                     if (card.Facedown) {
                         spells2[0, i] = "   | ? |";

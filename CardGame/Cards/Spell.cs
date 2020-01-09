@@ -76,20 +76,20 @@ namespace CardGame.Cards {
                     spelltrigger = (SpellTrigger) spell.GetEnum("trigger",SpellTrigger.IMMEDIATE);
                     triggeramount = spell.Get("triggeramount",0);
 
-                    this.effects = new List<SpellEffect>();
+                    this.effects = new List<CardEffect>();
                     foreach (XMLSection e in spell.GetSections("effect")) {
-                        SpellEffect effect = new SpellEffect();
-                        effect.TargetType = e.GetEnum<SpellEffectTargetType>("target");
-                        effect.Range = e.GetEnum("range",SpellEffectTargetRange.ANY);
-                        effect.Action = e.GetEnum<SpellEffectAction>("action");
-                        effect.TargetAssignment = e.GetEnum("assignment",SpellEffectTargetAssignment.CHOOSE);
-                        effect.EffectStat = e.GetEnum("stat", SpellEffectStat.NULL);
+                        CardEffect effect = new CardEffect();
+                        effect.TargetType = e.GetEnum<CardEffectTargetType>("target");
+                        effect.Range = e.GetEnum("range",CardEffectTargetRange.ANY);
+                        effect.Action = e.GetEnum<CardEffectAction>("action");
+                        effect.TargetAssignment = e.GetEnum("assignment",CardEffectTargetAssignment.CHOOSE);
+                        effect.EffectStat = e.GetEnum("stat", CardEffectStat.NULL);
                         effect.Amount = e.Get("amount", 0);
 
-                        effect.Requirements = new List<SpellEffectTargetRequirement>();
+                        effect.Requirements = new List<CardEffectTargetRequirement>();
                         foreach (XMLSection r in e.GetSections("requirement")) {
-                            SpellEffectTargetRequirement requirement = new SpellEffectTargetRequirement();
-                            requirement.Stat = r.GetEnum<SpellEffectStat>("stat");
+                            CardEffectTargetRequirement requirement = new CardEffectTargetRequirement();
+                            requirement.Stat = r.GetEnum<CardEffectStat>("stat");
                             requirement.Maximum = r.Get("maximum", 9999);
                             r.Get("minimum",0);
                             effect.Requirements.Add(requirement);
@@ -100,60 +100,6 @@ namespace CardGame.Cards {
 
                     break;
                 }
-            }
-        }
-
-        //TODO: Move this to Card
-        public void ResolveEffects(Battle battle, Battler owner, Card triggeringCard = null) {
-            foreach (SpellEffect e in effects) {
-                List<Card> possibleTargets = new List<Card>();
-                switch (e.TargetType) {
-                    case SpellEffectTargetType.MONSTER:
-                        if (e.Range != SpellEffectTargetRange.OPPONENT) for (int i = 0; i < owner.Field.GetLength(0); i++) if (owner.Field[0, i] != null) possibleTargets.Add(owner.Field[0, i]);
-
-                        if (e.Range != SpellEffectTargetRange.SELF) {
-                            Battler opponent = battle.GetOpponent(owner);
-                            for (int i = 0; i < opponent.Field.GetLength(0); i++) if (opponent.Field[0, i] != null) possibleTargets.Add(opponent.Field[0, i]);
-                        }
-                        break;
-                    case SpellEffectTargetType.SPELL:
-                        if (e.Range != SpellEffectTargetRange.OPPONENT) for (int i = 0; i < owner.Field.GetLength(1); i++) if (owner.Field[1, i] != null) e.Targets.Add(owner.Field[1, i]);
-
-                        if (e.Range != SpellEffectTargetRange.SELF) {
-                            Battler opponent = battle.GetOpponent(owner);
-                            for (int i = 0; i < opponent.Field.GetLength(1); i++) if (opponent.Field[1, i] != null) e.Targets.Add(opponent.Field[1, i]);
-                        }
-                        break;
-                }
-                switch (e.TargetAssignment) {
-                    case SpellEffectTargetAssignment.CHOOSE:
-                        e.Targets.Add(owner.ChooseSpellTarget(battle, this, effects.IndexOf(e)));
-                        break;
-                    case SpellEffectTargetAssignment.PREVIOUS:
-                        if (effects.IndexOf(e) > 0) e.Targets.AddRange(effects[effects.IndexOf(e) - 1].Targets);
-                        break;
-                    case SpellEffectTargetAssignment.ALL:
-                        e.Targets.AddRange(possibleTargets);
-                        break;
-                    case SpellEffectTargetAssignment.FIRST:
-                        e.Targets.Add(possibleTargets[0]);
-                        break;
-                    case SpellEffectTargetAssignment.RANDOM:
-                        Random random = new Random();
-                        e.Targets.Add(possibleTargets[random.Next(0, possibleTargets.Count)]);
-                        break;
-                    case SpellEffectTargetAssignment.TRIGGER:
-                        break;
-                }
-                
-                //TODO: Actually perform the effect
-                switch (e.Action) {
-                    case SpellEffectAction.INHIBIT:
-                        if (triggeringCard == null) break;
-                        
-                        break;
-                }
-
             }
         }
 

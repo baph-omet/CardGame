@@ -120,7 +120,7 @@ namespace CardGame.Scenes {
                         if (b.Mana <= 0) break;
                     }
 
-                    for (int i = 0; i < b.Field.GetLength(1); i++) if (b.Field[0, i] != null) ((Monster) b.Field[0, i]).CanAttack = true;
+                    for (int i = 0; i < b.Field.Length; i++) if (b.Field.Monsters[i] != null) ((Monster) b.Field.Monsters[i]).CanAttack = true;
 
                     TurnStart?.Invoke(this, new BattleEventArgs(b, GetOpponent(b)));
 
@@ -186,9 +186,10 @@ namespace CardGame.Scenes {
 
         private Card GetHighlightedCard() {
             if (cursorLocation[0] < 0 || cursorLocation[1] < 0) return null;
-            if (cursorLocation[0] < 2) return battlers[1].Field[1 - cursorLocation[0], cursorLocation[1]];
-            if (cursorLocation[0] < 4) return battlers[0].Field[cursorLocation[0] - 2, cursorLocation[1]];
-            if (cursorLocation[0] < 7 && !ShowingChoices && (cursorLocation[0] - 4) * 3 + cursorLocation[1] < battlers[0].Hand.Count) return battlers[0].Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]];
+            if (cursorLocation[0] < 2) return (cursorLocation[0] == 1 ? (Card)battlers[1].Field.Monsters[cursorLocation[1]] : (Card)battlers[1].Field.Spells[cursorLocation[1]]);
+            if (cursorLocation[0] < 4) return (cursorLocation[0] == 2 ? (Card)battlers[1].Field.Monsters[cursorLocation[1]] : (Card)battlers[1].Field.Spells[cursorLocation[1]]);
+            if (cursorLocation[0] < 7 && !ShowingChoices && (cursorLocation[0] - 4) * 3 + cursorLocation[1] < battlers[0].Hand.Count)
+                return battlers[0].Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]];
             return null;
         }
 
@@ -303,8 +304,8 @@ namespace CardGame.Scenes {
                         MoveCursor(0, 1);
                         break;
                     case ConsoleKey.Enter:
-                        if (GetOpponent(b).Field[0, cursorLocation[1]] != null) {
-                            return (Monster) GetOpponent(b).Field[0, cursorLocation[1]];
+                        if (GetOpponent(b).Field.Monsters[cursorLocation[1]] != null) {
+                            return (Monster) GetOpponent(b).Field.Monsters[cursorLocation[1]];
                         }
                         break;
                 }
@@ -325,14 +326,14 @@ namespace CardGame.Scenes {
 
                     //TODO: check for monster effects
 
-                    for (int i = 0; i < user.Field.GetLength(1); i++) {
-                        if (user.Field[0,i] != null) {
-                            Monster mon = (Monster) user.Field[0, i];
+                    for (int i = 0; i < user.Field.Length; i++) {
+                        if (user.Field.Monsters[i] != null) {
+                            Monster mon = (Monster) user.Field.Monsters[i];
                             if (mon.CanAttack) {
                                 if (ai.Opponent.HasMonstersSummoned()) {
                                     int targetIndex = ai.GetBestTarget(i);
                                     if (targetIndex > -1) {
-                                        Monster target = (Monster)opponent.Field[0, targetIndex];
+                                        Monster target = (Monster)opponent.Field.Monsters[targetIndex];
                                         MonsterAttacking(user, mon, target, i, targetIndex);
                                     
                                     } else {
@@ -390,7 +391,7 @@ namespace CardGame.Scenes {
                         if (heldCard == null) break;
                         if (heldCard is Monster && cursorLocation[0] == 2) {
                             Monster mon = (Monster) heldCard;
-                            if (b.Field[0, cursorLocation[1]] == null) {
+                            if (b.Field.Monsters[cursorLocation[1]] == null) {
                                 if (b.ManaAllotment >= mon.Level) {
                                     SettingMonster(b, mon, cursorLocation[1]);
                                     heldCard = null;
@@ -398,7 +399,7 @@ namespace CardGame.Scenes {
                             } else ShowText("That space is occupied!");
                         } else if (heldCard is Spell && cursorLocation[0] == 3) {
                             Spell spl = (Spell) heldCard;
-                            if (b.Field[1, cursorLocation[1]] == null) {
+                            if (b.Field.Spells[cursorLocation[1]] == null) {
                                 if (b.ManaAllotment >= spl.Level) {
                                     SettingSpell(b, spl, cursorLocation[1]);
                                     heldCard = null;
@@ -412,7 +413,7 @@ namespace CardGame.Scenes {
                             if (cursorLocation[0] > 3) {
                                 SelectCard(b.Hand[(cursorLocation[0] - 4) * 3 + cursorLocation[1]]);
                             } else if (cursorLocation[0] == 2) {
-                                MonsterMenu(b, (Monster)b.Field[0, cursorLocation[1]]);
+                                MonsterMenu(b, (Monster)b.Field.Monsters[cursorLocation[1]]);
                             }
                             break;
                         }
@@ -438,14 +439,14 @@ namespace CardGame.Scenes {
                             } else {
                                 if (cursorLocation[0] == 1 && heldCard is Spell) {
                                     Spell spl = (Spell)heldCard;
-                                    if (b.Field[1, cursorLocation[1]] == null) {
+                                    if (b.Field.Spells[cursorLocation[1]] == null) {
                                         if (b.ManaAllotment >= spl.Level) {
                                             ActivatingSpell(b, spl, cursorLocation[1]);
                                             heldCard = null;
                                         } else ShowText("You don't have enough Mana to set this card!");
                                     } else ShowText("There's already a spell in that slot.");
                                 } else if (cursorLocation[0] == (b.Equals(battlers[0]) ? 2 : 1) && heldCard is Monster) {
-                                    if (b.Field[0, cursorLocation[1]] == null) {
+                                    if (b.Field.Monsters[cursorLocation[1]] == null) {
                                         if (b.ManaAllotment >= heldCard.Level) {
                                             b.Summon((Monster) heldCard, cursorLocation[1]);
                                             heldCard = null;
@@ -517,7 +518,7 @@ namespace CardGame.Scenes {
                     FlippingMonster(b,mon,heldCardLocation[0]);
                     break;
                 case "retire":
-                    b.Field[0, heldCardLocation[1]] = null;
+                    b.Field.Monsters[heldCardLocation[1]] = null;
                     b.Discard.Add(mon);
                     b.ManaAllotment += mon.Level;
                     ShowText("Retired " + mon.Name + ". Restored " + mon.Level + " Mana.");
@@ -745,7 +746,7 @@ namespace CardGame.Scenes {
                     ManaChange -= spell.TriggerEffects;
                     break;
             }
-            user.Field[1, splIndex] = null;
+            user.Field.Spells[splIndex] = null;
             user.Discard.Add(spell);
         }
 

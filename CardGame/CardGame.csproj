@@ -57,8 +57,7 @@
     <Compile Include="Cards\MonsterSpellBonus.cs" />
     <Compile Include="Cards\MonsterStats.cs" />
     <Compile Include="Cards\Spell.cs" />
-    <Compile Include="Cards\SpellEffect.cs" />
-    <Compile Include="Cards\SpellEffectTargetRequirement.cs" />
+    <Compile Include="Cards\CardEffect.cs" />
     <Compile Include="Characters\Battler.cs" />
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\MonsterType.cs" />
