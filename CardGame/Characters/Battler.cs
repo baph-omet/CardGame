@@ -42,6 +42,10 @@ namespace CardGame.Characters {
             Hand = new List<Card>();
             Discard = new List<Card>();
             PlayDeck = new List<Card>(Deck);
+            foreach (Card c in PlayDeck) {
+                c.Owner = this;
+                c.Controller = this;
+            }
             HasMoved = false;
             for (int i = 0; i < 5; i++) Draw();
         }
@@ -82,38 +86,37 @@ namespace CardGame.Characters {
             } return false;
         }
 
-        public void RetireMonster(int fieldIndex) {
-            if (fieldIndex >Field.Length) return;
-            if (Field.Monsters[fieldIndex] != null) {
-                Monster target = (Monster) Field.Monsters[ fieldIndex];
-                Field.Monsters[ fieldIndex] = null;
-                Discard.Add(target);
-                //Mana += target.Level;
-            }
-        }
-
-        public void RemoveSpell(int fieldIndex) {
+        public void DestroyCard(int fieldIndex, bool monster=true) {
             if (fieldIndex > Field.Length) return;
-            if (Field.Spells[fieldIndex] != null) {
-                Discard.Add(Field.Spells[ fieldIndex]);
-                Field.Spells[fieldIndex] = null;
+            if (monster) {
+                if (Field.Monsters[fieldIndex] != null) {
+                    Monster target = (Monster)Field.Monsters[fieldIndex];
+                    Field.Monsters[fieldIndex] = null;
+                    Discard.Add(target);
+                }
+            } else {
+                if (Field.Spells[fieldIndex] != null) {
+                    Discard.Add(Field.Spells[fieldIndex]);
+                    Field.Spells[fieldIndex] = null;
+                }
             }
         }
 
-        public bool Set(Monster monster, int fieldIndex) {
-            if (Summon(monster,fieldIndex)) {
-                monster.Flip();
-                return true;
-            } else return false;
-        }
-
-        public void SetSpell(Spell spell, int fieldIndex) {
-            if (Hand.Contains(spell) && Field.Spells[ fieldIndex] == null && ManaAllotment >= spell.Level) {
-                Field.Spells[ fieldIndex] = spell;
-                Field.Spells[ fieldIndex].Facedown = true;
-                HasMoved = true;
-                Hand.Remove(spell);
-                ManaAllotment -= spell.Level;
+        public bool Set(Card card, int fieldIndex) {
+            if (card is Monster) {
+                if (Summon((Monster)card, fieldIndex)) {
+                    ((Monster)card).Flip();
+                    return true;
+                } return false;
+            } else {
+                if (Hand.Contains(card) && Field.Spells[fieldIndex] == null && ManaAllotment >= card.Level) {
+                    Field.Spells[fieldIndex] = (Spell)card;
+                    Field.Spells[fieldIndex].Facedown = true;
+                    HasMoved = true;
+                    Hand.Remove(card);
+                    ManaAllotment -= card.Level;
+                    return true;
+                } return false;
             }
         }
 
@@ -146,7 +149,7 @@ namespace CardGame.Characters {
                 }
             }
             for (int i = 0; i <Field.Length; i++) {
-                Monster m = (Monster) Field.Monsters[ i];
+                Monster m = Field.Monsters[i];
                 if (m != null && m.CanAttack) return true;
             }
             return false;
@@ -154,23 +157,23 @@ namespace CardGame.Characters {
 
         public bool HasMonstersSummoned() {
             for (int i = 0; i <Field.Length; i++) {
-                if (Field.Monsters[ i] != null) return true;
+                if (Field.Monsters[i] != null) return true;
             } return false;
         }
 
         public bool AllMonsterZonesFull() {
             for (int i = 0; i <Field.Length; i++) {
-                if (Field.Monsters[ i] == null) return false;
+                if (Field.Monsters[i] == null) return false;
             } return true;
         }
 
         public bool HasSpellCards() {
-            for (int i = 0; i <Field.Length; i++) if (Field.Spells[ i] != null) return true;
+            for (int i = 0; i <Field.Length; i++) if (Field.Spells[i] != null) return true;
             return false;
         }
 
         public bool HasCounterSpells() {
-            for (int i = 0; i <Field.Length; i++)  if (Field.Spells[ i] != null && ((Spell) Field.Spells[ i]).SpellType == SpellType.COUNTER) return true;
+            for (int i = 0; i < Field.Length; i++) if (Field.Spells[i] != null && (Field.Spells[i]).SpellType == SpellType.COUNTER) return true;
             return false;
         }
 

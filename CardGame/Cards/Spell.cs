@@ -105,7 +105,7 @@ namespace CardGame.Cards {
 
         public void TriggerEffects(object sender, BattleEventArgs args) {
             //TODO: Handle triggered effects
-            ResolveEffects((Battle)sender, args.TriggeringPlayer);
+            ResolveEffects((Battle)sender);
         }
     }
 }

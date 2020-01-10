@@ -20,11 +20,10 @@ namespace CardGame.Cards {
         [XmlIgnore]
         public virtual int Level { get; set; }
         [XmlIgnore]
-        public Boolean Facedown;
+        public bool Facedown;
         [XmlIgnore]
         public bool WillPlay = true;
 
-        //TODO: Set Owner and Controller properties
         [XmlIgnore]
         public Battler Owner { get; set; }
         [XmlIgnore]
@@ -35,26 +34,28 @@ namespace CardGame.Cards {
         [XmlIgnore]
         public List<CardEffect> Effects { get { return effects; } }
 
+
+
         [XmlIgnore]
         protected int effectIndex = 0;
         [XmlIgnore]
         public int EffectIndex { get { return effectIndex; } }
 
-        public void ResolveEffects(Battle battle, Battler owner, Card triggeringCard = null) {
-            Battler opponent = battle.GetOpponent(owner);
+        public void ResolveEffects(Battle battle, Card triggeringCard = null) {
+            Battler opponent = battle.GetOpponent(Owner);
             foreach (CardEffect e in effects) {
                 List<Card> possibleTargets = new List<Card>();
                 switch (e.TargetType) {
                     case CardEffectTargetType.MONSTER:
-                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < owner.Field.Length; i++) 
-                                if (owner.Field.Monsters[i] != null) possibleTargets.Add(owner.Field.Monsters[i]);
+                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < Owner.Field.Length; i++) 
+                                if (Owner.Field.Monsters[i] != null) possibleTargets.Add(Owner.Field.Monsters[i]);
 
                         if (e.Range != CardEffectTargetRange.SELF)  for (int i = 0; i < opponent.Field.Length; i++) 
                                 if (opponent.Field.Monsters[i] != null) possibleTargets.Add(opponent.Field.Monsters[i]);
                         break;
                     case CardEffectTargetType.SPELL:
-                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < owner.Field.Length; i++) 
-                                if (owner.Field.Spells[i] != null) e.Targets.Add(owner.Field.Spells[i]);
+                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < Owner.Field.Length; i++) 
+                                if (Owner.Field.Spells[i] != null) e.Targets.Add(Owner.Field.Spells[i]);
 
                         if (e.Range != CardEffectTargetRange.SELF) for (int i = 0; i < opponent.Field.Length; i++)
                                 if (opponent.Field.Spells[i] != null) e.Targets.Add(opponent.Field.Spells[i]);
@@ -63,7 +64,7 @@ namespace CardGame.Cards {
 
                 switch (e.TargetAssignment) {
                     case CardEffectTargetAssignment.CHOOSE:
-                        e.Targets.Add(owner.ChooseEffectTarget(battle, this, effects.IndexOf(e)));
+                        e.Targets.Add(Owner.ChooseEffectTarget(battle, this, effects.IndexOf(e)));
                         break;
                     case CardEffectTargetAssignment.PREVIOUS:
                         if (effects.IndexOf(e) > 0) e.Targets.AddRange(effects[effects.IndexOf(e) - 1].Targets);
@@ -82,15 +83,24 @@ namespace CardGame.Cards {
                         if (triggeringCard != null) e.Targets.Add(triggeringCard);
                         break;
                 }
-
-                if (e.Targets.Count == 0) {
+                if (e.Targets.Count == 0 && e.Action == CardEffectAction.MANA) {
                     if (e.Action == CardEffectAction.MANA) {
-                        owner.StealMana(e.Amount, opponent, true);
-                        break;
+                        if (e.Range == CardEffectTargetRange.OPPONENT) Owner.StealMana(e.Amount, opponent, true);
+                        else if (e.Range == CardEffectTargetRange.SELF) {
+                            switch (e.EffectStat) {
+                                case CardEffectStat.ALLOTMENT:
+                                    Owner.ManaAllotment += e.Amount;
+                                    break;
+                                case CardEffectStat.RESERVE:
+                                    Owner.Mana += e.Amount;
+                                    break;
+                            }
+                        }
+                        effectIndex++;
+                        continue;
                     }
                 }
 
-                //TODO: Actually perform the effect
                 foreach (Card target in e.Targets) {
                     switch (e.Action) {
                         case CardEffectAction.INHIBIT:
@@ -102,22 +112,24 @@ namespace CardGame.Cards {
                             break;
                         case CardEffectAction.MANA:
                             if (e.Targets[0] is Monster) {
-                                owner.StealMana((Monster) e.Targets[0], opponent, true);
+                                Owner.StealMana((Monster) e.Targets[0], opponent, true);
                                 break;
                             }
 
-                            owner.StealMana(e.Targets[0].Level, opponent, true);
+                            Owner.StealMana(e.Targets[0].Level, opponent, true);
                             break;
                         case CardEffectAction.STAT:
                             if (target is Monster) {
                                 Monster m = (Monster)target;
-                                m.EquippedSpells.Add(new MonsterSpellBonus(Owner, -1, new MonsterStats(e.EffectStat == CardEffectStat.ATTACK ? e.Amount : 0, e.EffectStat == CardEffectStat.DEFENSE ? e.Amount : 0, e.EffectStat == CardEffectStat.LEVEL ? e.Amount : 0, m.Type)));
+                                m.EquippedBonuses.Add(new MonsterSpellBonus(Owner, -1, new MonsterStats(e.EffectStat == CardEffectStat.ATTACK ? e.Amount : 0, e.EffectStat == CardEffectStat.DEFENSE ? e.Amount : 0, e.EffectStat == CardEffectStat.LEVEL ? e.Amount : 0, m.Type)));
                             }
                             break;
                         case CardEffectAction.VIEW:
                             break;
                     }
                 }
+
+                effectIndex++;
             }
         }
     }

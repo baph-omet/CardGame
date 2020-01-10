@@ -448,7 +448,7 @@ namespace CardGame.Scenes {
                                 } else if (cursorLocation[0] == (b.Equals(battlers[0]) ? 2 : 1) && heldCard is Monster) {
                                     if (b.Field.Monsters[cursorLocation[1]] == null) {
                                         if (b.ManaAllotment >= heldCard.Level) {
-                                            b.Summon((Monster) heldCard, cursorLocation[1]);
+                                            SummoningMonster(b, (Monster)heldCard, cursorLocation[1]);
                                             heldCard = null;
                                             heldCardLocation = null;
                                         } else ShowText("You don't have enough Mana to summon this card!");
@@ -601,9 +601,20 @@ namespace CardGame.Scenes {
             if (args.Cancel || args.DestroyTriggerer) return false;
 
             ShowText(args.NonTriggeringPlayer.Name + "'s " + args.TargetedCard.Name + " was destroyed!");
-            args.NonTriggeringPlayer.RetireMonster(args.TargetedCardIndex);
+            args.NonTriggeringPlayer.DestroyCard(args.TargetedCardIndex);
 
             return true;
+        }
+
+        public bool SummoningMonster(Battler user, Monster mon, int monIndex) {
+            BattleCardEventArgs args = new BattleCardEventArgs(user, GetOpponent(user), mon, monIndex);
+            
+            Summon?.Invoke(this, args);
+
+            if (args.DestroyTriggerer) user.DestroyCard(monIndex);
+            if (args.Cancel || args.DestroyTriggerer) return false;
+
+            return user.Summon(mon, monIndex);
         }
 
         public bool SettingMonster(Battler user, Monster setMon, int setMonIndex) {
@@ -611,7 +622,7 @@ namespace CardGame.Scenes {
 
             SetMonster?.Invoke(this, args);
 
-            if (args.DestroyTriggerer) args.TriggeringPlayer.RetireMonster(args.TriggeringCardIndex);
+            if (args.DestroyTriggerer) args.TriggeringPlayer.DestroyCard(args.TriggeringCardIndex);
             if (args.Cancel || args.DestroyTriggerer) return false;
 
             args.TriggeringPlayer.Set((Monster)args.TriggeringCard, args.TriggeringCardIndex);
@@ -624,7 +635,7 @@ namespace CardGame.Scenes {
 
             SetSpell?.Invoke(this, args);
 
-            if (args.DestroyTriggerer) args.TriggeringPlayer.RemoveSpell(args.TriggeringCardIndex);
+            if (args.DestroyTriggerer) args.TriggeringPlayer.DestroyCard(args.TriggeringCardIndex,false);
             if (args.Cancel || args.DestroyTriggerer) return false;
 
             Spell spell = (Spell)args.TriggeringCard;
@@ -669,7 +680,7 @@ namespace CardGame.Scenes {
                     break;
             }
 
-            args.TriggeringPlayer.SetSpell(spell, setSplIndex);
+            args.TriggeringPlayer.Set(spell, setSplIndex);
 
             return true;
         }
@@ -686,7 +697,7 @@ namespace CardGame.Scenes {
             Spell spell = (Spell)args.TriggeringCard;
 
             ShowText(args.TriggeringPlayer + " activated " + args.TriggeringCard.Name + "!");
-            spell.ResolveEffects(this, args.TriggeringPlayer, args.TriggeringCard);
+            spell.ResolveEffects(this, args.TriggeringCard);
             if (spell.SpellType == SpellType.INSTANT || spell.SpellType == SpellType.COUNTER) RemovingSpell(args.TriggeringPlayer, spell, args.TriggeringCardIndex);
             return true;
         }

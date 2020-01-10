@@ -24,7 +24,7 @@ namespace CardGame.Cards {
         public MonsterType Type { get { return Stats.Type; } }
 
         [XmlIgnore]
-        public Boolean CanAttack;
+        public bool CanAttack;
         
         [XmlIgnore]
         private MonsterStats originalStats;
@@ -32,9 +32,9 @@ namespace CardGame.Cards {
         public MonsterStats OriginalStats { get { return originalStats; } }
         
         [XmlIgnore]
-        private List<MonsterSpellBonus> equippedspells;
+        private List<MonsterSpellBonus> equippedBonuses;
         [XmlIgnore]
-        public List<MonsterSpellBonus> EquippedSpells { get { return equippedspells; } }
+        public List<MonsterSpellBonus> EquippedBonuses { get { return equippedBonuses; } }
         
         [XmlIgnore]
         private List<MonsterSpellBonus> nonequippedbonuses;
@@ -45,7 +45,7 @@ namespace CardGame.Cards {
         public MonsterStats Stats {
             get {
                 MonsterStats stats = originalStats;
-                foreach (MonsterSpellBonus bonus in equippedspells) stats += bonus.StatChanges;
+                foreach (MonsterSpellBonus bonus in equippedBonuses) stats += bonus.StatChanges;
                 foreach (MonsterSpellBonus bonus in nonequippedbonuses) stats += bonus.StatChanges;
                 return stats;
             }
@@ -54,7 +54,7 @@ namespace CardGame.Cards {
         public Monster() {
             Facedown = false;
             CanAttack = true;
-            equippedspells = new List<MonsterSpellBonus>();
+            equippedBonuses = new List<MonsterSpellBonus>();
             nonequippedbonuses = new List<MonsterSpellBonus>();
 
             using (XmlReader reader = XmlReader.Create("Data/Monster.xml")) {
@@ -98,7 +98,7 @@ namespace CardGame.Cards {
             ID = id;
             Facedown = false;
             CanAttack = true;
-            equippedspells = new List<MonsterSpellBonus>();
+            equippedBonuses = new List<MonsterSpellBonus>();
             nonequippedbonuses = new List<MonsterSpellBonus>();
 
             using (XmlReader reader = XmlReader.Create("Data/Monster.xml")) {

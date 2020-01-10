@@ -2,7 +2,7 @@
 <spells>
   <spell id="001">
     <name>Fireball</name>
-    <description>Destroy a monster with less than 250 Defense</description>
+    <description>Target a monster with up to 250 Defense, destroy it.</description>
     <level>1</level>
     <effect>
       <target>MONSTER</target>
@@ -11,14 +11,12 @@
         <maximum>250</maximum>
         <minimum>0</minimum>
       </requirement>
-      <minimum>1</minimum>
-      <maximum>1</maximum>
       <action>KILL</action>
     </effect>
   </spell>
   <spell id="002">
     <name>Heal Wave</name>
-    <description>Add 5 Mana to your reserves</description>
+    <description>Add 5 Mana to your reserves.</description>
     <effect>
       <target>MANA</target>
       <range>SELF</range>
@@ -29,7 +27,7 @@
   </spell>
   <spell id="003">
     <name>Mana Spring</name>
-    <description>Gain 1 free Mana allotment per turn</description>
+    <description>Gain 1 Mana allotment per turn.</description>
     <level>2</level>
     <type>CONTINUOUS</type>
     <trigger>TURNSTART</trigger>
@@ -42,7 +40,7 @@
     </effect>
   </spell>
   <spell id="004">
-    <name>Roid Rage</name>
+    <name>'Roid Rage</name>
     <description>Target monster. Increase Attack by 100 and Level by 1. Decrease Defense by 50.</description>
     <level>2</level>
     <type>EQUIP</type>

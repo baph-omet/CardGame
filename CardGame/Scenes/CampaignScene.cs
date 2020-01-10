@@ -59,7 +59,7 @@ namespace CardGame.Scenes {
                 " Losses: " + player.GetLosses(npc.ID) +
                 " Ties: " + player.GetTies(npc.ID);
             TextScene confirm = new TextScene(text);
-            confirm.AddChoice("Battle", delegate () { NextScene(new Battle(player, npc)); });
+            confirm.AddChoice("Battle", delegate () { AddSubscene(new Battle(player, npc)); });
             confirm.AddChoice("Cancel", delegate () { EndSubscene(); });
             AddSubscene(confirm);
         }
