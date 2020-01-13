@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CardGame.Scenes;
 using CardGame.Characters;
-using SOPAPI.XML;
+using Vergil.XML;
 using System.Xml.Serialization;
 
 namespace CardGame.Cards {
