@@ -34,12 +34,16 @@ namespace CardGame.Cards {
         [XmlIgnore]
         public List<CardEffect> Effects { get { return effects; } }
 
-
+        [XmlIgnore]
+        private CardEffectType effectType;
+        [XmlIgnore]
+        public CardEffectType EffectType { get => effectType; }
 
         [XmlIgnore]
         protected int effectIndex = 0;
         [XmlIgnore]
         public int EffectIndex { get { return effectIndex; } }
+
 
         public void ResolveEffects(Battle battle, Card triggeringCard = null) {
             Battler opponent = battle.GetOpponent(Owner);
@@ -62,9 +66,10 @@ namespace CardGame.Cards {
                         break;
                 }
 
+                if (e.Targets == null) e.Targets = new List<Card>();
                 switch (e.TargetAssignment) {
                     case CardEffectTargetAssignment.CHOOSE:
-                        e.Targets.Add(Owner.ChooseEffectTarget(battle, this, effects.IndexOf(e)));
+                        e.Targets.Add(Owner.ChooseEffectTarget(battle, this, effects.IndexOf(e), possibleTargets));
                         break;
                     case CardEffectTargetAssignment.PREVIOUS:
                         if (effects.IndexOf(e) > 0) e.Targets.AddRange(effects[effects.IndexOf(e) - 1].Targets);
@@ -90,9 +95,11 @@ namespace CardGame.Cards {
                             switch (e.EffectStat) {
                                 case CardEffectStat.ALLOTMENT:
                                     Owner.ManaAllotment += e.Amount;
+                                    battle.ShowText(Owner.Name + " loaded " + e.Amount + " mana!");
                                     break;
                                 case CardEffectStat.RESERVE:
                                     Owner.Mana += e.Amount;
+                                    battle.ShowText(Owner.Name + " restored " + e.Amount + " mana!");
                                     break;
                             }
                         }
@@ -105,23 +112,40 @@ namespace CardGame.Cards {
                     switch (e.Action) {
                         case CardEffectAction.INHIBIT:
                             target.Effects[target.EffectIndex].Negated = true;
+                            battle.ShowText(target.Name + "'s effect was negated!");
                             break;
                         case CardEffectAction.KILL:
-                            if (target is Monster) battle.DestroyingMonster(Owner, this, (Monster)target, -1, -1);
+                            if (target is Monster) battle.DestroyingMonster(Owner, this, (Monster)target, -1, target.Owner.Field.FindIndex(target));
                             else battle.DestroyingSpell(Owner, this, (Spell)target, -1, -1);
+                            battle.ShowText(Owner.Name + "'s " + target.Name + " was destroyed!");
                             break;
                         case CardEffectAction.MANA:
-                            if (e.Targets[0] is Monster) {
-                                Owner.StealMana((Monster) e.Targets[0], opponent, true);
-                                break;
-                            }
-
-                            Owner.StealMana(e.Targets[0].Level, opponent, true);
+                            if (e.Targets[0] is Monster)  Owner.StealMana((Monster) e.Targets[0], opponent, true);
+                            else Owner.StealMana(e.Targets[0].Level, opponent, true);
+                            battle.ShowText(Owner.Name + "'s " + target.Name + " stole " + e.Targets[0].Level + "mana from " + opponent.Name + "!");
                             break;
                         case CardEffectAction.STAT:
                             if (target is Monster) {
                                 Monster m = (Monster)target;
-                                m.EquippedBonuses.Add(new MonsterSpellBonus(Owner, -1, new MonsterStats(e.EffectStat == CardEffectStat.ATTACK ? e.Amount : 0, e.EffectStat == CardEffectStat.DEFENSE ? e.Amount : 0, e.EffectStat == CardEffectStat.LEVEL ? e.Amount : 0, m.Type)));
+                                MonsterStats ms = new MonsterStats();
+                                ms.Type = m.Type;
+                                string direction = "increased";
+                                if (e.Amount < 0) direction = "decreased";
+                                switch (e.EffectStat) {
+                                    case CardEffectStat.ATTACK:
+                                        ms.Attack = e.Amount;
+                                        battle.ShowText(m.Name + "'s Attack " + direction + " by " + e.Amount + "!");
+                                        break;
+                                    case CardEffectStat.DEFENSE:
+                                        ms.Defense = e.Amount;
+                                        battle.ShowText(m.Name + "'s Defense " + direction + " by " + e.Amount + "!");
+                                        break;
+                                    case CardEffectStat.LEVEL:
+                                        ms.Level = e.Amount;
+                                        battle.ShowText(m.Name + "'s Level " + direction + " by " + e.Amount + "!");
+                                        break;
+                                }
+                                m.EquippedBonuses.Add(new MonsterSpellBonus(Owner, -1, ms));
                             }
                             break;
                         case CardEffectAction.VIEW:
@@ -130,6 +154,23 @@ namespace CardGame.Cards {
                 }
 
                 effectIndex++;
+            }
+
+            if (this is Spell) {
+                Owner.ManaAllotment -= Level;
+                if (!(new[] { CardEffectType.CONTINUOUS, CardEffectType.EQUIP }.Contains(EffectType))) {
+                    int fieldIndex = Owner.Field.FindIndex(this);
+                    if (fieldIndex >= 0) Owner.DestroyCard(fieldIndex, false);
+                    else {
+                        foreach (Card c in Owner.Hand) {
+                            if (c == this) {
+                                Owner.Discard.Add(c);
+                                Owner.Hand.Remove(c);
+                                return;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

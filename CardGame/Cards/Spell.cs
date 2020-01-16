@@ -6,48 +6,17 @@ using Vergil.XML;
 using System.Xml.Serialization;
 
 namespace CardGame.Cards {
-    public enum SpellType {
-        INSTANT,
-        CONTINUOUS,
-        EQUIP,
-        COUNTER
-    }
-
-    public enum SpellTargetFacedownMode {
-        FACEUP,
-        FACEDOWN,
-        ANY
-    }
-
-    public enum SpellTrigger {
-        IMMEDIATE,
-        DRAW,
-        SUMMON,
-        SPELL,
-        SPELLDESTROYED,
-        SETMONSTER,
-        FLIPMONSTER,
-        SETSPELL,
-        TURNSTART,
-        TURNEND,
-        MONSTERDESTROYED,
-        MANASTEAL,
-        MONSTERATTACK,
-        MANAALLOTMENT,
-        MANA,
-        MANACHANGE
-    }
 
     public class Spell : Card {
         [XmlIgnore]
-        private SpellType spelltype;
+        private CardEffectType spelltype;
         [XmlIgnore]
-        public SpellType SpellType { get { return spelltype; } }
+        public CardEffectType SpellType { get { return spelltype; } }
 
         [XmlIgnore]
-        private SpellTrigger spelltrigger;
+        private CardEffectTrigger spelltrigger;
         [XmlIgnore]
-        public SpellTrigger Trigger { get { return spelltrigger; } }
+        public CardEffectTrigger Trigger { get { return spelltrigger; } }
 
         [XmlIgnore]
         private bool voluntary;
@@ -72,8 +41,8 @@ namespace CardGame.Cards {
                     Description = spell.Get("description", "Description not found.");
                     voluntary = spell.Get("voluntary",true);
                     Level = spell.Get("level",0);
-                    spelltype = (SpellType) spell.GetEnum("type",SpellType.INSTANT);
-                    spelltrigger = (SpellTrigger) spell.GetEnum("trigger",SpellTrigger.IMMEDIATE);
+                    spelltype = (CardEffectType) spell.GetEnum("type",CardEffectType.INSTANT);
+                    spelltrigger = (CardEffectTrigger) spell.GetEnum("trigger",CardEffectTrigger.IMMEDIATE);
                     triggeramount = spell.Get("triggeramount",0);
 
                     effects = new List<CardEffect>();
@@ -82,7 +51,7 @@ namespace CardGame.Cards {
                         effect.TargetType = e.GetEnum<CardEffectTargetType>("target");
                         effect.Range = e.GetEnum("range",CardEffectTargetRange.ANY);
                         effect.Action = e.GetEnum<CardEffectAction>("action");
-                        effect.TargetAssignment = e.GetEnum("assignment",CardEffectTargetAssignment.CHOOSE);
+                        effect.TargetAssignment = e.GetEnum("assignment",CardEffectTargetAssignment.NONE);
                         effect.EffectStat = e.GetEnum("stat", CardEffectStat.NULL);
                         effect.Amount = e.Get("amount", 0);
 
@@ -104,7 +73,6 @@ namespace CardGame.Cards {
         }
 
         public void TriggerEffects(object sender, BattleEventArgs args) {
-            //TODO: Handle triggered effects
             ResolveEffects((Battle)sender);
         }
     }

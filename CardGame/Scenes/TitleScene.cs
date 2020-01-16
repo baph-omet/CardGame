@@ -12,7 +12,7 @@ namespace CardGame.Scenes {
             Dictionary<string, Action> d = new Dictionary<string, Action>();
             if (Player.GetAllPlayers().Count > 1) d.Add("Load Game", LoadGame);
             d.Add("New Game", NewGame);
-            d.Add("Test Battle", TestBattle);
+            //d.Add("Test Battle", TestBattle);
             //d.Add("Format Player File", FormatPlayerFile);
             d.Add("Quit", Quit);
             return d;

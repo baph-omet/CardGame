@@ -4,6 +4,7 @@ using CardGame.Characters;
 using CardGame.Cards;
 using CardGame.AI;
 using CardGame.UI;
+using System.Linq;
 
 namespace CardGame.Scenes {
     public class BattleEventArgs : EventArgs {
@@ -437,7 +438,7 @@ namespace CardGame.Scenes {
                                 heldCardLocation = null;
                             // Else...
                             } else {
-                                if (cursorLocation[0] == 1 && heldCard is Spell) {
+                                if (cursorLocation[0] == 3 && heldCard is Spell) {
                                     Spell spl = (Spell)heldCard;
                                     if (b.Field.Spells[cursorLocation[1]] == null) {
                                         if (b.ManaAllotment >= spl.Level) {
@@ -640,42 +641,42 @@ namespace CardGame.Scenes {
 
             Spell spell = (Spell)args.TriggeringCard;
             switch (spell.Trigger) {
-                case SpellTrigger.DRAW:
+                case CardEffectTrigger.DRAW:
                     Draw += spell.TriggerEffects;
                     break;
-                case SpellTrigger.SUMMON:
+                case CardEffectTrigger.SUMMON:
                     Summon += spell.TriggerEffects;
                     break;
-                case SpellTrigger.SPELL:
+                case CardEffectTrigger.SPELL:
                     SpellActivate += spell.TriggerEffects;
                     break;
-                case SpellTrigger.SETMONSTER:
+                case CardEffectTrigger.SETMONSTER:
                     SetMonster += spell.TriggerEffects;
                     break;
-                case SpellTrigger.FLIPMONSTER:
+                case CardEffectTrigger.FLIPMONSTER:
                     FlipMonster += spell.TriggerEffects;
                     break;
-                case SpellTrigger.SETSPELL:
+                case CardEffectTrigger.SETSPELL:
                     SetSpell += spell.TriggerEffects;
                     break;
-                case SpellTrigger.TURNSTART:
+                case CardEffectTrigger.TURNSTART:
                     TurnStart += spell.TriggerEffects;
                     break;
-                case SpellTrigger.TURNEND:
+                case CardEffectTrigger.TURNEND:
                     TurnEnd += spell.TriggerEffects;
                     break;
-                case SpellTrigger.MONSTERDESTROYED:
+                case CardEffectTrigger.MONSTERDESTROYED:
                     MonsterDestroyed += spell.TriggerEffects;
                     break;
-                case SpellTrigger.MANASTEAL:
+                case CardEffectTrigger.MANASTEAL:
                     ManaSteal += spell.TriggerEffects;
                     break;
-                case SpellTrigger.MONSTERATTACK:
+                case CardEffectTrigger.MONSTERATTACK:
                     MonsterAttack += spell.TriggerEffects;
                     break;
-                case SpellTrigger.MANAALLOTMENT:
-                case SpellTrigger.MANA:
-                case SpellTrigger.MANACHANGE:
+                case CardEffectTrigger.MANAALLOTMENT:
+                case CardEffectTrigger.MANA:
+                case CardEffectTrigger.MANACHANGE:
                     ManaChange += spell.TriggerEffects;
                     break;
             }
@@ -690,15 +691,15 @@ namespace CardGame.Scenes {
 
             SpellActivate?.Invoke(this, args);
 
-            if (args.DestroyTriggerer || (args.Cancel && spl.SpellType != SpellType.CONTINUOUS)) DestroyingSpell(args.NonTriggeringPlayer, args.TargetedCard, args.TriggeringCard, args.TargetedCardIndex, args.TriggeringCardIndex);
+            if (args.DestroyTriggerer || (args.Cancel && spl.SpellType != CardEffectType.CONTINUOUS)) DestroyingSpell(args.NonTriggeringPlayer, args.TargetedCard, args.TriggeringCard, args.TargetedCardIndex, args.TriggeringCardIndex);
             if (args.Cancel || args.DestroyTriggerer) return false;
 
             
             Spell spell = (Spell)args.TriggeringCard;
 
-            ShowText(args.TriggeringPlayer + " activated " + args.TriggeringCard.Name + "!");
+            ShowText(args.TriggeringPlayer.Name + " activated " + args.TriggeringCard.Name + "!");
             spell.ResolveEffects(this, args.TriggeringCard);
-            if (spell.SpellType == SpellType.INSTANT || spell.SpellType == SpellType.COUNTER) RemovingSpell(args.TriggeringPlayer, spell, args.TriggeringCardIndex);
+            if (spell.SpellType == CardEffectType.INSTANT || spell.SpellType == CardEffectType.COUNTER) RemovingSpell(args.TriggeringPlayer, spell, args.TriggeringCardIndex);
             return true;
         }
 
@@ -718,42 +719,42 @@ namespace CardGame.Scenes {
 
         private void RemovingSpell(Battler user, Spell spell, int splIndex) {
             switch (spell.Trigger) {
-                case SpellTrigger.DRAW:
+                case CardEffectTrigger.DRAW:
                     Draw -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.SUMMON:
+                case CardEffectTrigger.SUMMON:
                     Summon -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.SPELL:
+                case CardEffectTrigger.SPELL:
                     SpellActivate -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.SETMONSTER:
+                case CardEffectTrigger.SETMONSTER:
                     SetMonster -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.FLIPMONSTER:
+                case CardEffectTrigger.FLIPMONSTER:
                     FlipMonster -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.SETSPELL:
+                case CardEffectTrigger.SETSPELL:
                     SetSpell -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.TURNSTART:
+                case CardEffectTrigger.TURNSTART:
                     TurnStart -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.TURNEND:
+                case CardEffectTrigger.TURNEND:
                     TurnEnd -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.MONSTERDESTROYED:
+                case CardEffectTrigger.MONSTERDESTROYED:
                     MonsterDestroyed -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.MANASTEAL:
+                case CardEffectTrigger.MANASTEAL:
                     ManaSteal -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.MONSTERATTACK:
+                case CardEffectTrigger.MONSTERATTACK:
                     MonsterAttack -= spell.TriggerEffects;
                     break;
-                case SpellTrigger.MANAALLOTMENT:
-                case SpellTrigger.MANA:
-                case SpellTrigger.MANACHANGE:
+                case CardEffectTrigger.MANAALLOTMENT:
+                case CardEffectTrigger.MANA:
+                case CardEffectTrigger.MANACHANGE:
                     ManaChange -= spell.TriggerEffects;
                     break;
             }
@@ -819,6 +820,68 @@ namespace CardGame.Scenes {
         private void PlayerLoss() {
             UpdateRecord(false);
             ShowText(winner.Name + ": " + ((NPC)winner).Text[2]);
+        }
+
+        public Card PlayerChooseTarget(Battler user, Card source, List<Card> possibleTargets) {
+            ShowText("Choose target...");
+            Card selected = null;
+            heldCard = source;
+            ConsoleKey[] controls = {
+                ConsoleKey.DownArrow,
+                ConsoleKey.RightArrow,
+                ConsoleKey.UpArrow,
+                ConsoleKey.LeftArrow,
+                ConsoleKey.Enter,
+                ConsoleKey.Escape
+            };
+            bool looping = true;
+            while (looping) {
+                ConsoleKey pressedKey = Control.WaitForKey(controls);
+                switch (pressedKey) {
+                    case ConsoleKey.DownArrow:
+                        MoveCursor(1, 0);
+                        break;
+                    case ConsoleKey.RightArrow:
+                        MoveCursor(0, 1);
+                        break;
+                    case ConsoleKey.UpArrow:
+                        MoveCursor(-1, 0);
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        MoveCursor(0, -1);
+                        break;
+                    case ConsoleKey.Enter:
+                        Card c = null;
+                        switch (cursorLocation[0]) {
+                            case 0:
+                                c = GetOpponent(user).Field.Spells[cursorLocation[1]];
+                                break;
+                            case 1:
+                                c = GetOpponent(user).Field.Monsters[cursorLocation[1]];
+                                break;
+                            case 2:
+                                c = user.Field.Monsters[cursorLocation[1]];
+                                break;
+                            case 3:
+                                c = user.Field.Spells[cursorLocation[1]];
+                                break;
+                        }
+                        if (c == null || c == source) break;
+                        if (!possibleTargets.Contains(c)) ShowText("Invalid target.");
+                        else {
+                            selected = c;
+                            looping = false;
+                        }
+                        break;
+                    case ConsoleKey.Escape:
+                        looping = false;
+                        break;
+                }
+                UpdateSprites();
+            }
+
+            heldCard = null;
+            return selected;
         }
     }
 }

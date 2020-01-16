@@ -39,7 +39,8 @@ namespace CardGame.Cards {
         FIRST,
         ALL,
         PREVIOUS,
-        TRIGGER
+        TRIGGER,
+        NONE
     }
 
     public enum CardEffectTargetType {
@@ -49,6 +50,39 @@ namespace CardGame.Cards {
         HAND,
         DECK,
         DISCARD
+    }
+
+
+    public enum CardEffectType {
+        INSTANT,
+        CONTINUOUS,
+        EQUIP,
+        COUNTER
+    }
+
+    public enum CardEffectTargetFacedownMode {
+        FACEUP,
+        FACEDOWN,
+        ANY
+    }
+
+    public enum CardEffectTrigger {
+        IMMEDIATE,
+        DRAW,
+        SUMMON,
+        SPELL,
+        SPELLDESTROYED,
+        SETMONSTER,
+        FLIPMONSTER,
+        SETSPELL,
+        TURNSTART,
+        TURNEND,
+        MONSTERDESTROYED,
+        MANASTEAL,
+        MONSTERATTACK,
+        MANAALLOTMENT,
+        MANA,
+        MANACHANGE
     }
 
     public class CardEffect {

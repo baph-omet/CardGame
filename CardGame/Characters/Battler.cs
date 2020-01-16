@@ -173,7 +173,7 @@ namespace CardGame.Characters {
         }
 
         public bool HasCounterSpells() {
-            for (int i = 0; i < Field.Length; i++) if (Field.Spells[i] != null && (Field.Spells[i]).SpellType == SpellType.COUNTER) return true;
+            for (int i = 0; i < Field.Length; i++) if (Field.Spells[i] != null && (Field.Spells[i]).SpellType == CardEffectType.COUNTER) return true;
             return false;
         }
 
@@ -181,7 +181,7 @@ namespace CardGame.Characters {
             PlayDeck = Util.Shuffle(PlayDeck, new Random());
         }
 
-        public abstract Card ChooseEffectTarget(Battle battle, Card spell, int spellEffectIndex);
+        public abstract Card ChooseEffectTarget(Battle battle, Card spell, int spellEffectIndex, List<Card> possibleTargets);
 
         public new bool Equals(object obj) {
             if (this == null) return false;
@@ -197,8 +197,18 @@ namespace CardGame.Characters {
         public int Length { get { return 5; } }
 
         public BattlerField() {
-            Spells = new Spell[5];
-            Monsters = new Monster[5];
+            Spells = new Spell[Length];
+            Monsters = new Monster[Length];
+        }
+
+        public int FindIndex(Card card) {
+            for (int i = 0; i < Length; i++) {
+                if (card is Monster) {
+                    if (Monsters[i] == (Monster)card) return i;
+                } else if (card is Spell) {
+                    if (Spells[i] == (Spell)card) return i;
+                }
+            } return -1;
         }
     }
 }

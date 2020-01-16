@@ -4,6 +4,7 @@ using System.Xml;
 using CardGame.Cards;
 using System.IO;
 using System.Xml.Serialization;
+using CardGame.Scenes;
 
 namespace CardGame.Characters{
     [Serializable]
@@ -166,9 +167,8 @@ namespace CardGame.Characters{
             return defaultPlayer;
         }
 
-        public override Card ChooseEffectTarget(Scenes.Battle battle, Card card, int spellEffectIndex) {
-            //TODO: ChooseSpellTarget(...)
-            throw new NotImplementedException();
+        public override Card ChooseEffectTarget(Battle battle, Card source, int spellEffectIndex, List<Card> possibleTargets) {
+            return battle.PlayerChooseTarget(this, source, possibleTargets);
         }
     }
 }

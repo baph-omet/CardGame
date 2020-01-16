@@ -94,8 +94,9 @@ namespace CardGame.Characters {
             return null;
         }
 
-        public override Card ChooseEffectTarget(Battle battle, Card spell, int spellEffectIndex) {
-            throw new NotImplementedException();
+        public override Card ChooseEffectTarget(Battle battle, Card spell, int spellEffectIndex, List<Card> possibleTargets) {
+            Random random = new Random();
+            return possibleTargets[random.Next(possibleTargets.Count)];
         }
     }
 }

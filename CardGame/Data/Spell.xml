@@ -6,6 +6,7 @@
     <level>1</level>
     <effect>
       <target>MONSTER</target>
+      <assignment>CHOOSE</assignment>
       <requirement>
         <stat>DEFENSE</stat>
         <maximum>250</maximum>
@@ -17,6 +18,7 @@
   <spell id="002">
     <name>Heal Wave</name>
     <description>Add 5 Mana to your reserves.</description>
+    <level>3</level>
     <effect>
       <target>MANA</target>
       <range>SELF</range>
@@ -46,6 +48,7 @@
     <type>EQUIP</type>
     <effect>
       <target>MONSTER</target>
+      <assignment>CHOOSE</assignment>
       <type>STAT</type>
       <stat>ATTACK</stat>
       <amount>100</amount>
