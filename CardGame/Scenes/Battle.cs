@@ -5,6 +5,7 @@ using CardGame.Cards;
 using CardGame.AI;
 using CardGame.UI;
 using System.Linq;
+using ConsoleUI;
 
 namespace CardGame.Scenes {
     public class BattleEventArgs : EventArgs {
@@ -442,8 +443,9 @@ namespace CardGame.Scenes {
                                     Spell spl = (Spell)heldCard;
                                     if (b.Field.Spells[cursorLocation[1]] == null) {
                                         if (b.ManaAllotment >= spl.Level) {
-                                            ActivatingSpell(b, spl, cursorLocation[1]);
+                                            b.Field.Spells[cursorLocation[1]] = spl;
                                             heldCard = null;
+                                            ActivatingSpell(b, spl, cursorLocation[1]);
                                         } else ShowText("You don't have enough Mana to set this card!");
                                     } else ShowText("There's already a spell in that slot.");
                                 } else if (cursorLocation[0] == (b.Equals(battlers[0]) ? 2 : 1) && heldCard is Monster) {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CardGame.Characters;
 using CardGame.Cards;
+using ConsoleUI;
 
 namespace CardGame.Scenes {
     public class MainMenuScene : TextScene {
@@ -50,7 +51,7 @@ namespace CardGame.Scenes {
 
         public void QuitToMenu() {
             TextScene confirm = new TextScene("Warning", "Are you sure you want to quit?");
-            confirm.AddChoice("Yes", delegate() { Program.Scene = new TitleScene(); });
+            confirm.AddChoice("Yes", delegate() { Program.SceneManager.SetBaseScene(new TitleScene()); });
             confirm.AddChoice("No", delegate() { confirm.EndScene(); });
             AddSubscene(confirm);
         }

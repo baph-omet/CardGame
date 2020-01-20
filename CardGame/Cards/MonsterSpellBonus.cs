@@ -16,9 +16,9 @@ namespace CardGame.Cards {
         public MonsterStats StatChanges { get { return statchanges; } }
 
         public MonsterSpellBonus(Battler cardowner, int spellzone, MonsterStats statchanges) {
-            cardowner = cardowner;
-            spellzone = spellzone;
-            statchanges = statchanges;
+            this.cardowner = cardowner;
+            this.spellzone = spellzone;
+            this.statchanges = statchanges;
         }
     }
 }

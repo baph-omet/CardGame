@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CardGame.Characters;
 using CardGame.UI;
+using ConsoleUI;
 
 namespace CardGame.Scenes {
     public class NewGameScene : TextScene {
@@ -19,7 +20,7 @@ namespace CardGame.Scenes {
                 switch (index) {
                     case 1:
                         AddSubscene(new TextEnterScene("What is your name?", false));
-                        Program.Scene = this;
+                        Program.SceneManager.AddSubscene(this);
                         break;
                     case 2:
                         string typedText = ((TextEnterScene) Subscene).TypedText;

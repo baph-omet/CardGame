@@ -49,19 +49,19 @@
     <effect>
       <target>MONSTER</target>
       <assignment>CHOOSE</assignment>
-      <type>STAT</type>
+      <action>STAT</action>
       <stat>ATTACK</stat>
       <amount>100</amount>
     </effect>
     <effect>
       <assignment>PREVIOUS</assignment>
-      <type>STAT</type>
+      <action>STAT</action>
       <stat>LEVEL</stat>
       <amount>1</amount>
     </effect>
     <effect>
       <assignment>PREVIOUS</assignment>
-      <type>STAT</type>
+      <action>STAT</action>
       <stat>DEFENSE</stat>
       <amount>-50</amount>
     </effect>
@@ -75,13 +75,12 @@
     <effect>
       <target>SPELL</target>
       <assignment>TRIGGER</assignment>
-      <type>INHIBIT</type>
-      <stat>SPELL</stat>
+      <action>INHIBIT</action>
     </effect>
     <effect>
       <assignment>PREVIOUS</assignment>
-      <type>KILL</type>
-      <stat>SPELL</stat>
+      <action>KILL</action>
+      <target>SPELL</target>
     </effect>
   </spell>
   <spell id="006">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CardGame.Characters;
+using ConsoleUI;
 
 namespace CardGame.Scenes {
     class TitleScene : TextScene {
@@ -19,7 +20,7 @@ namespace CardGame.Scenes {
         }
 
         public static void Quit() {
-            Program.Scene = null;
+            Program.Quit();
         }
 
         public static void TestBattle() {
@@ -30,7 +31,7 @@ namespace CardGame.Scenes {
         }
 
         public static void NewGame() {
-            Program.Scene = new NewGameScene();
+            Program.SceneManager.AddSubscene(new NewGameScene());
         }
 
         public static void LoadGame() {
@@ -39,14 +40,14 @@ namespace CardGame.Scenes {
             foreach (Player p in players) {
                 if (p.ID > 0) loadscreen.AddChoice(p.Name + " (" + p.Level + ")", delegate() { LoadPlayer(p.ID); });
             }
-            loadscreen.AddChoice("Cancel", delegate() { Program.Scene = new TitleScene(); });
-            Program.Scene = loadscreen;
+            loadscreen.AddChoice("Cancel", delegate() { Program.SceneManager.AddSubscene(new TitleScene()); });
+            Program.SceneManager.AddSubscene(loadscreen);
         }
 
         public static void LoadPlayer(int ID) {
             Player p = Player.GetPlayer(ID);
             Program.ActivePlayer = p;
-            Program.Scene.NextScene(new MainMenuScene());
+            Program.SceneManager.NextScene(new MainMenuScene());
         }
 
         public static void FormatPlayerFile() {

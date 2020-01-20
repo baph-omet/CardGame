@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CardGame.Cards;
 using CardGame.Characters;
+using ConsoleUI;
 
 namespace CardGame.UI {
     public class HandSprite : Sprite {

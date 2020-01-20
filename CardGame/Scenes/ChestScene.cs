@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CardGame.Cards;
 using CardGame.UI;
+using ConsoleUI;
 
 namespace CardGame.Scenes {
     public class ChestScene : TextScene {
@@ -106,7 +107,7 @@ namespace CardGame.Scenes {
                 Dictionary<string, Action> choices = new Dictionary<string, Action>();
                 choices.Add("Add to Deck", delegate() { AddToDeck(c); UpdateCards(); });
                 choices.Add("Add to Chest", delegate() { AddToChest(c); UpdateCards(); });
-                choices.Add("Back", delegate() { Program.Scene.EndSubscene(); });
+                choices.Add("Back", delegate() { Program.SceneManager.EndSubscene(); });
 
                 int noInDeck = 0;
                 if (Deck.ContainsKey(c.ID)) noInDeck = Deck[c.ID];
@@ -118,15 +119,15 @@ namespace CardGame.Scenes {
                 );
             }
 
-            AddChoice("Back", delegate() { Program.Scene.EndSubscene(); });
+            AddChoice("Back", delegate() { Program.SceneManager.EndSubscene(); });
         }
 
         public static void AddToDeck(Card c) {
             if (!Deck.ContainsKey(c.ID)) Deck.Add(c.ID, 0);
             if (Deck[c.ID] >= 3) {
-                Program.Scene.AddSubscene(new TextScene("", "You can't add any more of this card to your deck."));
+                Program.SceneManager.AddSubscene(new TextScene("", "You can't add any more of this card to your deck."));
             } else if (!Chest.ContainsKey(c.ID)) {
-                Program.Scene.AddSubscene(new TextScene("", "You don't have any more of this card in your chest."));
+                Program.SceneManager.AddSubscene(new TextScene("", "You don't have any more of this card in your chest."));
             } else if (Chest[c.ID] > 0) {
                 bool removed = false;
                 foreach (Card ca in Program.ActivePlayer.Chest) {
@@ -137,16 +138,16 @@ namespace CardGame.Scenes {
                     }
                 }
                 if (!removed) {
-                    Program.Scene.AddSubscene(new TextScene("Warning", "Could not remove card from chest."));
+                    Program.SceneManager.AddSubscene(new TextScene("Warning", "Could not remove card from chest."));
                     return;
                 }
                 Chest[c.ID]--;
                 Program.ActivePlayer.Deck.Add(c);
                 Deck[c.ID]++;
-                Program.Scene.AddSubscene(new TextScene("", "Added to deck."));
+                Program.SceneManager.AddSubscene(new TextScene("", "Added to deck."));
                 Program.ActivePlayer.Save();
             } else {
-                Program.Scene.AddSubscene(new TextScene("", "You don't have any more to add."));
+                Program.SceneManager.AddSubscene(new TextScene("", "You don't have any more to add."));
             }
         }
 
@@ -162,16 +163,16 @@ namespace CardGame.Scenes {
                     }
                 }
                 if (!removed) {
-                    Program.Scene.AddSubscene(new TextScene("Warning", "Could not remove card from deck."));
+                    Program.SceneManager.AddSubscene(new TextScene("Warning", "Could not remove card from deck."));
                     return;
                 }
                 Deck[c.ID]--;
                 Program.ActivePlayer.Chest.Add(c);
                 Chest[c.ID]++;
-                Program.Scene.AddSubscene(new TextScene("", "Added to chest."));
+                Program.SceneManager.AddSubscene(new TextScene("", "Added to chest."));
                 Program.ActivePlayer.Save();
             } else {
-                Program.Scene.AddSubscene(new TextScene("", "You don't have any more to add."));
+                Program.SceneManager.AddSubscene(new TextScene("", "You don't have any more to add."));
             }
         }
     }

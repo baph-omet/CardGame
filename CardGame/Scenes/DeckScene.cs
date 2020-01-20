@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CardGame.Cards;
 using CardGame.UI;
+using ConsoleUI;
 
 namespace CardGame.Scenes {
     public class DeckScene : ChestScene {
@@ -43,7 +44,7 @@ namespace CardGame.Scenes {
                 Dictionary<string, Action> choices = new Dictionary<string, Action>();
                 choices.Add("Add to Deck", delegate() { AddToDeck(c); UpdateCards(); });
                 choices.Add("Add to Chest", delegate() { AddToChest(c); UpdateCards(); });
-                choices.Add("Back", delegate() { Program.Scene.EndSubscene(); });
+                choices.Add("Back", delegate() { Program.SceneManager.EndSubscene(); });
 
 
                 int noInDeck = 0;
@@ -54,14 +55,14 @@ namespace CardGame.Scenes {
                 AddChoice(
                     "(" + id.ToString("000") + ") " + c.Name + " [" + noInDeck + "-" + noInChest + "]",
                     delegate() {
-                        Program.Scene.AddSubscene(
+                        Program.SceneManager.AddSubscene(
                             new TextScene(new CardSprite(c).Render() + "\nDeck: " + noInDeck + " Chest: " + noInChest, "What do you want to do?",choices)
                         );
                     }
                 );
             }
 
-            AddChoice("Back", delegate() { Program.Scene.EndSubscene(); });
+            AddChoice("Back", delegate() { Program.SceneManager.EndSubscene(); });
         }
     }
 }

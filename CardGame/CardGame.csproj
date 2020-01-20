@@ -37,6 +37,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ConsoleUI">
+      <HintPath>..\..\ConsoleUI\ConsoleUI\bin\Debug\ConsoleUI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -73,17 +76,12 @@
     <Compile Include="Scenes\ChestScene.cs" />
     <Compile Include="Scenes\DeckScene.cs" />
     <Compile Include="Scenes\MainMenuScene.cs" />
-    <Compile Include="Scenes\TextScene.cs" />
     <Compile Include="Scenes\NewGameScene.cs" />
-    <Compile Include="Scenes\Scene.cs" />
-    <Compile Include="Scenes\TextEnterScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
     <Compile Include="UI\CardSprite.cs" />
     <Compile Include="UI\HandSprite.cs" />
     <Compile Include="UI\PlayerFieldSprite.cs" />
     <Compile Include="UI\OpponentFieldSprite.cs" />
-    <Compile Include="UI\TextBox.cs" />
-    <Compile Include="UI\Sprite.cs" />
     <Compile Include="Util.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CardGame.Characters;
 using CardGame.Cards;
+using ConsoleUI;
 
 namespace CardGame.UI {
     public class OpponentFieldSprite : Sprite {
