@@ -1,5 +1,6 @@
 ﻿using System;
 using CardGame.Characters;
+using CardGame.Data;
 using CardGame.Scenes;
 using ConsoleUI;
 
@@ -13,6 +14,7 @@ namespace CardGame {
         /// </summary>
         [STAThread]
         static void Main() {
+            DB.PopulateTables();
             WindowSize = new[] { 50, 63 };
             Initialize();
             StartingScene = new TitleScene();

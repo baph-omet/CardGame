@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using CardGame.Data;
 
 namespace CardGame.Cards {
 
@@ -179,6 +180,10 @@ namespace CardGame.Cards {
             Monster highestDefense = null;
             foreach (Monster mon in monsters) if (highestDefense == null || mon.Defense > highestDefense.Defense) highestDefense = mon;
             return highestDefense;
+        }
+
+        public void SaveToDatabase() {
+            DB.SaveCard(this);
         }
     }
 }

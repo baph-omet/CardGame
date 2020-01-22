@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using CardGame.Characters;
-using CardGame.Cards;
 using ConsoleUI;
 
 namespace CardGame.Scenes {
@@ -36,7 +32,7 @@ namespace CardGame.Scenes {
                 "\nLosses: " + p.Losses +
                 "\nTies: " + p.Ties +
                 "\nGames Played: " + (p.Wins + p.Losses + p.Ties) +
-                "\nWin/Loss Ratio: " + string.Format("{0:0.00}", (p.Losses !=0 ? (double) p.Wins / (double) p.Losses : 0))
+                "\nWin/Loss Ratio: " + string.Format("{0:0.00}", p.Losses != 0 ? p.Wins / (double) p.Losses : 0D)
             );
             pText.AppendLine();
             foreach (NPC n in NPC.GetAllNPCs()) pText.AppendLine(

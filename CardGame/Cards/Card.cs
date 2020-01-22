@@ -173,5 +173,24 @@ namespace CardGame.Cards {
                 }
             }
         }
+
+        public static List<Card> GetAllCards() {
+            List<Card> cards = new List<Card>();
+            for (int i = 1; i < 100; i++) {
+                try {
+                    cards.Add(new Monster(i));
+                } catch (Exception) {
+                    break;
+                }
+            }
+            for (int i = 1; i < 100; i++) {
+                try {
+                    cards.Add(new Spell(i));
+                } catch (Exception) {
+                    break;
+                }
+            }
+            return cards;
+        }
     }
 }

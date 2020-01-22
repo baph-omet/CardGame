@@ -7,7 +7,7 @@
   <message label="AttackTie">...but neither claimed victory.</message>
   <group label="NewGame">
     <message>Welcome to this card game project!</message>
-    <message>This is a card battling game based on Yu-Gi-Oh and Hearthstone, but with a larger focus on monster battling.</message>
+    <message>This is a card battling game based on Yu-Gi-Oh and Magic, but with a larger focus on monster battling.</message>
     <message>Included in this game is something of a Campaign mode.</message>
     <message>Battle each opponent to raise your battler level and get new cards.</message>
     <message>Do you have what it takes to reach the top?</message>

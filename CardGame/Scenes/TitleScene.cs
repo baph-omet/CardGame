@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CardGame.Characters;
 using ConsoleUI;
 
@@ -37,10 +35,8 @@ namespace CardGame.Scenes {
         public static void LoadGame() {
             TextScene loadscreen = new TextScene("Choose your player", "", new Dictionary<string, Action>());
             List<Player> players = Player.GetAllPlayers();
-            foreach (Player p in players) {
-                if (p.ID > 0) loadscreen.AddChoice(p.Name + " (" + p.Level + ")", delegate() { LoadPlayer(p.ID); });
-            }
-            loadscreen.AddChoice("Cancel", delegate() { Program.SceneManager.AddSubscene(new TitleScene()); });
+            foreach (Player p in players) if (p.ID > 0) loadscreen.AddChoice(p.Name + " (" + p.Level + ")", delegate() { LoadPlayer(p.ID); });
+            loadscreen.AddChoice("Cancel", delegate() { Program.SceneManager.EndSubscene(); });
             Program.SceneManager.AddSubscene(loadscreen);
         }
 
