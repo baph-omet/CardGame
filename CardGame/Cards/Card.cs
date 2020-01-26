@@ -3,7 +3,6 @@ using CardGame.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace CardGame.Cards {
@@ -51,14 +50,14 @@ namespace CardGame.Cards {
                 List<Card> possibleTargets = new List<Card>();
                 switch (e.TargetType) {
                     case CardEffectTargetType.MONSTER:
-                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < Owner.Field.Length; i++) 
+                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < Owner.Field.Length; i++)
                                 if (Owner.Field.Monsters[i] != null) possibleTargets.Add(Owner.Field.Monsters[i]);
 
-                        if (e.Range != CardEffectTargetRange.SELF)  for (int i = 0; i < opponent.Field.Length; i++) 
+                        if (e.Range != CardEffectTargetRange.SELF) for (int i = 0; i < opponent.Field.Length; i++)
                                 if (opponent.Field.Monsters[i] != null) possibleTargets.Add(opponent.Field.Monsters[i]);
                         break;
                     case CardEffectTargetType.SPELL:
-                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < Owner.Field.Length; i++) 
+                        if (e.Range != CardEffectTargetRange.OPPONENT) for (int i = 0; i < Owner.Field.Length; i++)
                                 if (Owner.Field.Spells[i] != null) e.Targets.Add(Owner.Field.Spells[i]);
 
                         if (e.Range != CardEffectTargetRange.SELF) for (int i = 0; i < opponent.Field.Length; i++)
@@ -120,7 +119,7 @@ namespace CardGame.Cards {
                             battle.ShowText(Owner.Name + "'s " + target.Name + " was destroyed!");
                             break;
                         case CardEffectAction.MANA:
-                            if (e.Targets[0] is Monster)  Owner.StealMana((Monster) e.Targets[0], opponent, true);
+                            if (e.Targets[0] is Monster) Owner.StealMana((Monster)e.Targets[0], opponent, true);
                             else Owner.StealMana(e.Targets[0].Level, opponent, true);
                             battle.ShowText(Owner.Name + "'s " + target.Name + " stole " + e.Targets[0].Level + "mana from " + opponent.Name + "!");
                             break;
@@ -178,14 +177,18 @@ namespace CardGame.Cards {
             List<Card> cards = new List<Card>();
             for (int i = 1; i < 100; i++) {
                 try {
-                    cards.Add(new Monster(i));
+                    Monster m = new Monster(i);
+                    if (string.IsNullOrEmpty(m.Name)) break;
+                    cards.Add(m);
                 } catch (Exception) {
                     break;
                 }
             }
             for (int i = 1; i < 100; i++) {
                 try {
-                    cards.Add(new Spell(i));
+                    Spell s = new Spell(i);
+                    if (string.IsNullOrEmpty(s.Name)) break;
+                    cards.Add(s);
                 } catch (Exception) {
                     break;
                 }
