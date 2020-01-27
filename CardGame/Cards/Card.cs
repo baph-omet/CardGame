@@ -29,7 +29,7 @@ namespace CardGame.Cards {
         public Battler Controller { get; set; }
 
         [XmlIgnore]
-        protected List<CardEffect> effects;
+        protected List<CardEffect> effects = new List<CardEffect>();
         [XmlIgnore]
         public List<CardEffect> Effects { get { return effects; } }
 

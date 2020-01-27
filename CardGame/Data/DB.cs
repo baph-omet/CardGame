@@ -146,7 +146,7 @@ namespace CardGame.Data {
                 connection.AddRecord("spell", new[] { spl.ID.ToString(), spl.Name, spl.Description, spl.Level.ToString(), spl.EffectType.EnumName(), spl.Trigger.EnumName() }, "spell_id=" + spl.ID);
             }
 
-            foreach (CardEffect e in card?.Effects) {
+            foreach (CardEffect e in card.Effects) {
                 connection.AddRecord("effects", new[] { card.ID.ToString(), card.Effects.IndexOf(e).ToString(), e.TargetAssignment.EnumName(), e.TargetType.EnumName(), e.Range.EnumName(), e.Action.EnumName(), e.EffectStat.EnumName(), e.Amount.ToString() }, "spell_id=" + card.ID);
             }
         }
