@@ -1,6 +1,8 @@
 ﻿using CardGame.Cards;
 using CardGame.Characters;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using Vergil.Data.DB;
 using Vergil.Utilities;
@@ -134,27 +136,44 @@ namespace CardGame.Data {
         public static void PopulateTables() {
             OpenDatabaseConnection();
             foreach (Card c in Card.GetAllCards()) SaveCard(c);
+            foreach (Player p in Player.GetAllPlayers()) SavePlayer(p);
             CloseDatabaseConnection();
         }
 
         public static void SaveCard(Card card) {
             if (card is Monster) {
                 Monster mon = (Monster)card;
-                connection.AddRecord("monster", new[] { mon.ID.ToString(), mon.Name, mon.Description, mon.Attack.ToString(), mon.Defense.ToString(), mon.Level.ToString(), mon.Type.EnumName() }, "monster_id=" + mon.ID);
+                connection.AddRecord("monster", new[] { mon.ID.ToString(), mon.Name, mon.Description, mon.Attack.ToString(), mon.Defense.ToString(), mon.Level.ToString(), mon.Type.GetName() }, "monster_id=" + mon.ID);
             } else if (card is Spell) {
                 Spell spl = (Spell)card;
-                connection.AddRecord("spell", new[] { spl.ID.ToString(), spl.Name, spl.Description, spl.Level.ToString(), spl.EffectType.EnumName(), spl.Trigger.EnumName() }, "spell_id=" + spl.ID);
+                connection.AddRecord("spell", new[] { spl.ID.ToString(), spl.Name, spl.Description, spl.Level.ToString(), spl.EffectType.GetName(), spl.Trigger.GetName() }, "spell_id=" + spl.ID);
             }
 
             foreach (CardEffect e in card.Effects) {
-                connection.AddRecord("effects", new[] { card.ID.ToString(), card.Effects.IndexOf(e).ToString(), e.TargetAssignment.EnumName(), e.TargetType.EnumName(), e.Range.EnumName(), e.Action.EnumName(), e.EffectStat.EnumName(), e.Amount.ToString() }, "spell_id=" + card.ID);
+                connection.AddRecord("effects", new[] { card.ID.ToString(), card.Effects.IndexOf(e).ToString(), e.TargetAssignment.GetName(), e.TargetType.GetName(), e.Range.GetName(), e.Action.GetName(), e.EffectStat.GetName(), e.Amount.ToString() }, "spell_id=" + card.ID);
             }
         }
 
         public static void SavePlayer(Player player) {
             connection.AddRecord("player", new[] { player.ID.ToString(), player.Name, player.Level.ToString() }, "player_id=" + player.ID);
-            foreach (Card c in player.Chest) {
 
+            foreach (List<Card> list in new[] { player.Chest, player.Deck }) {
+                foreach (Card c in list) {
+                    using (DbDataReader reader = connection.Select("card_collections",new[] { "deck_count", "chest_count" }, string.Format("character_id={0} AND is_player=1 AND card_id={1} and is_spell={2}", player.ID.ToString(), c.ID.ToString(), c is Spell ? 1 : 0))) {
+                        reader.Read();
+                        if (!reader.HasRows) {
+                            connection.Insert("card_collections", new[] { "character_id", "is_player", "card_id", "is_spell", "deck_count", "chest_count" }, new[] { player.ID.ToString(), "1", c.ID.ToString(), c is Spell ? "1" : "0", list == player.Deck ? "1" : "0", list == player.Deck ? "0" : "1" });
+                            continue;
+                        }
+
+                        int count = reader.GetInt32(list == player.Deck ? 0 : 1) + 1;
+                        connection.Update("card_collections", new[] { (list == player.Deck ? "deck" : "chest") + "_count" }, new[] { count.ToString() }, string.Format("character_id={0} AND is_player=1 AND card_id={1} and is_spell={2}", player.ID.ToString(), c.ID.ToString(), c is Spell ? 1 : 0));
+                    }
+                }
+            }
+            
+            foreach (BattleRecord rec in player.Record) {
+                connection.AddRecord("battle_record", new[] { player.ID.ToString(), rec.OpponentID.ToString(), rec.Wins.ToString(), rec.Losses.ToString(), rec.Ties.ToString() }, string.Format("player_id={0} AND npc_id={1}",player.ID, rec.OpponentID));
             }
         }
     }
